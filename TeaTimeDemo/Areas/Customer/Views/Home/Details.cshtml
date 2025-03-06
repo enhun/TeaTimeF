@@ -1,0 +1,392 @@
+﻿@model TeaTimeDemo.Models.ViewModels.ProductDetailsViewModel
+@using TeaTimeDemo.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    var antiforgery = Html.AntiForgeryToken();
+}
+
+<form method="post" id="addToCartForm">
+    <input hidden asp-for="Product.ProductId" />
+    <div class="container mt-5">
+        <div class="row">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-7 col-lg-7">
+                        <div class="row align-items-center">
+                            <div class="col-6"><h3 class="mb-0">@Model.Product.Product.Name</h3></div>
+                            <div class="col-6 text-end"><span class="badge bg-info"><h6 class="mb-0">@Model.Product.Product.Category.Name</h6></span></div>
+                        </div>
+                        <div class="row">
+                            <h5 class="pt-3">@Model.Product.Product.Size / <span class="text-danger fw-bold">@Model.Product.Product.Price.ToString("c")</span></h5>
+                        </div>
+                        <div class="row">
+                            <h6 class="my-2">【@Model.Product.Product.Description】</h6>
+                        </div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        冰量 Ice Level
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        @{
+                                            var iceOptions = new[] { "正常冰 Regular Ice", "少冰 Less Ice", "微冰 Easy Ice", "去冰 Ice-Free", "溫 Warm", "熱 Hot" };
+                                        }
+                                        @foreach (var ice in iceOptions)
+                                        {
+                                            <div class="form-check ps-1 my-3 d-flex justify-content-between">
+                                                <label class="form-check-label" for="ice-@ice.Replace(" ", "")">@ice</label>
+                                                @if (Model.Product.Ice == ice)
+                                                {
+                                                    <input asp-for="Product.Ice" class="form-check-input" type="radio" id="ice-@ice.Replace(" ", "")" value="@ice" checked />
+                                                }
+                                                else
+                                                {
+                                                    <input asp-for="Product.Ice" class="form-check-input" type="radio" id="ice-@ice.Replace(" ", "")" value="@ice" />
+                                                }
+                                            </div>
+                                            <hr />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        甜度 Sweetness Level
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        @{
+                                            var sweetnessOptions = new[] { "正常甜 Regular Sugar", "少糖 Less Sugar", "半糖 Half Sugar", "微糖 Quarter Sugar", "無糖 Sugar-Free" };
+                                        }
+                                        @foreach (var sweetness in sweetnessOptions)
+                                        {
+                                            <div class="form-check ps-1 my-3 d-flex justify-content-between">
+                                                <label class="form-check-label" for="sweetness-@sweetness.Replace(" ", "")">@sweetness</label>
+                                                @if (Model.Product.Sweetness == sweetness)
+                                                {
+                                                    <input asp-for="Product.Sweetness" class="form-check-input" type="radio" id="sweetness-@sweetness.Replace(" ", "")" value="@sweetness" checked />
+                                                }
+                                                else
+                                                {
+                                                    <input asp-for="Product.Sweetness" class="form-check-input" type="radio" id="sweetness-@sweetness.Replace(" ", "")" value="@sweetness" />
+                                                }
+                                            </div>
+                                            <hr />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        數量 Count
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <!-- 增加數量調整控制 -->
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" id="decrease-count">-</button>
+                                            <input name="Count" class="form-control mx-2 text-center" id="product-count" value="1" min="1" style="max-width: 100px;" />
+                                            <button type="button" class="btn btn-outline-primary btn-sm" id="increase-count">+</button>
+                                        </div>
+
+                                        <span asp-validation-for="Product.Count" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5 align-self-start">
+                        <img src="@Model.Product.Product.ImageUrl" width="100%" class="rounded" />
+                    </div>
+                </div>
+                <!-- 推薦商品區塊 -->
+                @if (ViewBag.RecommendedProducts != null)
+                {
+                    <div class="row mt-4">
+                        <h4>推薦商品</h4>
+                        @foreach (var product in ViewBag.RecommendedProducts as IEnumerable<Product>)
+                        {
+                            <div class="col-4">
+                                <img src="@product.ImageUrl" class="img-thumbnail" style="width:100%;" />
+                                <p>@product.Name - @product.Price.ToString("c")</p>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="bg-white mt-5 mb-3">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-6 pb-1">
+                    <a class="btn btn-light form-control text-primary d-flex justify-content-center align-items-center" style="height:50px;" asp-action="Index">返回列表</a>
+                </div>
+                <div class="col-12 col-md-6 pb-1">
+                    <button type="submit" value="Add to Cart" class="btn btn-primary form-control" style="height:50px;">加入購物車</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- 評論區域 -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>評論</h3>
+            <!-- 在評論區域的foreach循環中修改如下 -->
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                foreach (var review in Model.Reviews)
+                {
+                    <div class="review mb-3 p-3 border rounded">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p><strong>@review.User.Name</strong> 評分: @review.Rating</p>
+                                <p>@review.Comment</p>
+                                <p><small class="text-muted">@review.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small></p>
+                            </div>
+                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Manager))
+                            {
+                                <button class="btn btn-danger btn-sm delete-review"
+                                        data-review-id="@review.Id"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteConfirmModal">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+
+            <!-- 添加確認刪除的Modal -->
+            <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">確認刪除</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            確定要刪除這則評論嗎？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>新增評論</h3>
+            <form asp-action="AddReview" method="post">
+                <input type="hidden" name="productId" value="@Model.Product.Product.Id" />
+                <div class="form-group mb-3">
+                    <label for="rating">評分 (1-5)</label>
+                    <input type="range" class="form-range" min="1" max="5" id="rating" name="rating" value="5" />
+                    <div class="d-flex justify-content-between">
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="comment">評論</label>
+                    <textarea id="comment" name="comment" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">提交評論</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast 容器 -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">通知</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <!-- 訊息內容由 JavaScript 填充 -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Toast 訊息顯示
+            var toastMessage = '@TempData["toast"]';
+            if (toastMessage) {
+                var toastEl = $('#liveToast');
+                toastEl.find('.toast-body').text(toastMessage);
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+
+            // 刪除評論功能
+            let reviewIdToDelete = null;
+
+            // 當點擊刪除按鈕時
+            $('.delete-review').click(function () {
+                reviewIdToDelete = $(this).data('review-id');
+            });
+
+            // 當點擊確認刪除按鈕時
+            $('#confirmDelete').click(function () {
+                if (reviewIdToDelete) {
+                    // 添加 CSRF token
+                    var token = $('input[name="__RequestVerificationToken"]').val();
+
+                    $.ajax({
+                        url: '/Customer/Home/DeleteReview',
+                        type: 'POST',
+                        data: {
+                            reviewId: reviewIdToDelete,
+                            __RequestVerificationToken: token
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                                // 顯示成功訊息
+                                var toastEl = $('#liveToast');
+                                toastEl.find('.toast-body').text('評論已成功刪除');
+                                var toast = new bootstrap.Toast(toastEl);
+                                toast.show();
+
+                                // 重新載入頁面
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
+                            } else {
+                                // 顯示錯誤訊息
+                                var toastEl = $('#liveToast');
+                                toastEl.find('.toast-body').text('刪除失敗：' + result.message);
+                                var toast = new bootstrap.Toast(toastEl);
+                                toast.show();
+                            }
+                        },
+                        error: function () {
+                            // 顯示錯誤訊息
+                            var toastEl = $('#liveToast');
+                            toastEl.find('.toast-body').text('刪除時發生錯誤');
+                            var toast = new bootstrap.Toast(toastEl);
+                            toast.show();
+                        }
+                    });
+                }
+                $('#deleteConfirmModal').modal('hide');
+            });
+
+                  // 【新增】數量增減按鈕功能
+        $('#increase-count').on('click', function() {
+            var countInput = $('#product-count');
+            var currentValue = parseInt(countInput.val());
+            if (!isNaN(currentValue)) {
+                countInput.val(currentValue + 1);
+            }
+        });
+
+        $('#decrease-count').on('click', function() {
+            var countInput = $('#product-count');
+            var currentValue = parseInt(countInput.val());
+            if (!isNaN(currentValue) && currentValue > 1) {
+                countInput.val(currentValue - 1);
+            }
+        });
+
+        // 【修改】加入購物車前表單檢查（修正了選擇器）
+        $('#addToCartForm').on('submit', function(e) {
+            // 【修改】直接獲取 id 為 product-count 的輸入框值
+            var countInput = $('#product-count');
+            var countValue = parseInt(countInput.val());
+            var iceSelected = $('input[name="Product.Ice"]:checked').val();
+            var sweetnessSelected = $('input[name="Product.Sweetness"]:checked').val();
+
+            console.log('Form submitted');
+            console.log('ProductId:', $('input[name="Product.ProductId"]').val());
+            console.log('Count:', countValue);
+            console.log('Ice selected:', iceSelected);
+            console.log('Sweetness selected:', sweetnessSelected);
+
+            // 驗證數量
+            if (countValue <= 0 || isNaN(countValue)) {
+                e.preventDefault();
+                alert('請選擇至少一個數量');
+                return false;
+            }
+
+            // 驗證冰量
+            if (!iceSelected) {
+                e.preventDefault();
+                alert('請選擇冰量');
+                return false;
+            }
+
+            // 驗證甜度
+            if (!sweetnessSelected) {
+                e.preventDefault();
+                alert('請選擇甜度');
+                return false;
+            }
+
+            // 表單成功提交後延遲執行，確保數據已經保存
+            setTimeout(function() {
+                loadCartCount();
+            }, 1000);
+        });
+
+
+            // 記錄AJAX錯誤
+            $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+                console.error('AJAX Error:', thrownError, jqxhr.status, jqxhr.responseText);
+            });
+
+            // 載入購物車數量
+            loadCartCount();
+
+            function loadCartCount() {
+                $.ajax({
+                    url: '/Customer/Home/GetCartSummary',
+                    type: 'GET',
+                    success: function(result) {
+                        console.log('Cart summary:', result);
+                        if (result.count > 0) {
+                            $('#cart-count').text(result.count);
+                        } else {
+                            $('#cart-count').text('');
+                        }
+                    }
+                });
+            }
+
+            // 確保默認選擇了冰量和甜度
+            if (!$('input[name="Product.Ice"]:checked').val()) {
+                $('input[name="Product.Ice"]:first').prop('checked', true);
+            }
+
+            if (!$('input[name="Product.Sweetness"]:checked').val()) {
+                $('input[name="Product.Sweetness"]:first').prop('checked', true);
+            }
+        });
+    </script>
+}

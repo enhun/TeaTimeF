@@ -1,0 +1,83 @@
+﻿@model List<Store>
+
+
+<div class="container">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">
+                分店清單
+            </h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Store" asp-action="Upsert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> 新增分店
+            </a>
+        </div>
+    </div>
+
+    <table id="tblData"class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    分店名稱
+                </th>
+                <th>
+                    地址
+                </th>
+                <th>
+                    城市
+                </th>
+                <th>
+                    電話號碼
+                </th>
+                <th>
+                    備註
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        @* <tbody> *@
+        @*     @foreach (var obj in Model) *@
+        @*     { *@
+        @*         <tr> *@
+        @*             <td> *@
+        @*                 @obj.Name *@
+        @*             </td> *@
+
+        @*             <td> *@
+        @*                 @obj.Category.Name *@
+        @*             <td> *@
+        @*                 @obj.Size *@
+        @*             </td> *@
+        @*             <td> *@
+        @*                 @obj.Price *@
+        @*             <td> *@
+        @*             <td> *@
+        @*                 @obj.Description *@
+        @*             </td> *@
+        @*             <td> *@
+        @*                 <div class="w-75 btn-group" role="group"> *@
+        @*                     <a asp-controller="Product" asp-action="Upsert" asp-route-id="@obj.Id" *@
+        @*                        class="btn btn-primary mx-2"> *@
+        @*                         <i class="bi bi-pencil-square"></i> 編輯 *@
+        @*                     </a> *@
+
+        @*                     <a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id" *@
+        @*                        class="btn btn-danger mx-2"> *@
+        @*                         <i class="bi bi-trash-fill"></i> 刪除 *@
+        @*                         </a> *@
+
+
+
+        @*                 </div> *@
+
+        @*             </td> *@
+        @*         </tr> *@
+        @*     } *@
+        @* </tbody> *@
+    </table>
+</div>
+@section Scripts{
+    <script src="~/js/store.js"></script>
+}

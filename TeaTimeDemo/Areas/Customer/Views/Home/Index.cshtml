@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Product>
+
+<div class="container mt-3">
+    <!-- 搜尋與篩選 -->
+    <form asp-action="Index" method="get" class="row mb-3">
+        <div class="col-6">
+            <input type="text" name="search" class="form-control" placeholder="搜尋商品名稱..." value="@Context.Request.Query["search"]" />
+        </div>
+        <div class="col-4">
+            <select name="category" class="form-select">
+                <option value="">所有分類</option>
+                @foreach (var category in Model.Select(p => p.Category.Name).Distinct())
+                {
+                    <option value="@category" selected="@(category == Context.Request.Query["category"])">@category</option>
+                }
+            </select>
+        </div>
+        <div class="col-2">
+            <button type="submit" class="btn btn-primary w-100">篩選</button>
+        </div>
+    </form>
+
+    <!-- 購物車摘要 -->
+    <div class="d-flex justify-content-end mb-3">
+        <span id="cartSummary" class="badge bg-secondary">購物車: 0 項 - $0.00</span>
+    </div>
+
+    <div class="row pb-3">
+        @foreach (var product in Model)
+        {
+            <div class="col-lg-3 col-sm-6">
+                <div class="row p-2">
+                    <div class="col-12 p-1" style="border:1px solid #008cba; border-radius:5px">
+                        <div class="card">
+                            <img src="@product.ImageUrl" class="card-img-top rounded" />
+                            <div class="card-body">
+                                <div class="p-1">
+                                    <p class="card-title h5 text-primary">@product.Name</p>
+                                    <p class="card-title text-secondary">
+                                        <b>@product.Size</b>
+                                    </p>
+                                </div>
+                                <div class="p-1">
+                                    <p>
+                                        價格：
+                                        <b>$@product.Price.ToString("0.00")</b>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a asp-action="Details" class="btn btn-primary form-control" asp-route-productId="@product.Id">
+                                    Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.get("@Url.Action("GetCartSummary")", function (data) {
+                $("#cartSummary").text(`購物車: ${data.count} 項 - $${data.total.toFixed(2)}`);
+            });
+        });
+    </script>
+}
