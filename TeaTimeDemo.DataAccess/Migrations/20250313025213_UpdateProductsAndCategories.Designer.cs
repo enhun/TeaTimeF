@@ -12,8 +12,8 @@ using TeaTimeDemo.DataAccess.Data;
 namespace TeaTimeDemo.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250313011754_AddUserFavorites")]
-    partial class AddUserFavorites
+    [Migration("20250313025213_UpdateProductsAndCategories")]
+    partial class UpdateProductsAndCategories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -467,7 +467,7 @@ namespace TeaTimeDemo.DataAccess.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            Description = "天然果飲，迷人多變",
+                            Description = "阿嬤果園的甜蜜回憶，每一口都是童年時光的滋味",
                             DisplayOrder = 0,
                             ImageUrl = "",
                             Name = "台灣水果茶",
@@ -479,7 +479,7 @@ namespace TeaTimeDemo.DataAccess.Migrations
                         {
                             Id = 2,
                             CategoryId = 2,
-                            Description = "品鐵觀音，享人生的味道",
+                            Description = "阿嬤茶櫃裡的珍藏，三代傳承的韻味與智慧",
                             DisplayOrder = 0,
                             ImageUrl = "",
                             Name = "鐵觀音",
@@ -491,7 +491,7 @@ namespace TeaTimeDemo.DataAccess.Migrations
                         {
                             Id = 3,
                             CategoryId = 3,
-                            Description = "用咖啡體悟休閒時光",
+                            Description = "老時光的慢磨咖啡，一杯喚醒阿嬤廊下的午後寧靜",
                             DisplayOrder = 0,
                             ImageUrl = "",
                             Name = "美式咖啡",

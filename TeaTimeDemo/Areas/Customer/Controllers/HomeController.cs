@@ -31,16 +31,17 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
 
         public IActionResult Index(string category, string search)
         {
-            string cacheKey = $"ProductList_{category}_{search}";
+            // 註解掉快取相關程式碼
+            /*string cacheKey = $"ProductList_{category}_{search}";
             if (!_cache.TryGetValue(cacheKey, out IEnumerable<Product> productList))
-            {
-                productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
-                if (!string.IsNullOrEmpty(category))
-                    productList = productList.Where(p => p.Category?.Name == category);
-                if (!string.IsNullOrEmpty(search))
-                    productList = productList.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
-                _cache.Set(cacheKey, productList, TimeSpan.FromMinutes(10));
-            }
+            {*/
+            var productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            if (!string.IsNullOrEmpty(category))
+                productList = productList.Where(p => p.Category?.Name == category);
+            if (!string.IsNullOrEmpty(search))
+                productList = productList.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+            /*_cache.Set(cacheKey, productList, TimeSpan.FromMinutes(10));
+        }*/
             return View(productList);
         }
 

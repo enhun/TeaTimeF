@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeaTimeDemo.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserFavorites : Migration
+    public partial class UpdateProductsAndCategories : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,27 @@ namespace TeaTimeDemo.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.UpdateData(
+                table: "Products",
+                keyColumn: "Id",
+                keyValue: 1,
+                column: "Description",
+                value: "阿嬤果園的甜蜜回憶，每一口都是童年時光的滋味");
+
+            migrationBuilder.UpdateData(
+                table: "Products",
+                keyColumn: "Id",
+                keyValue: 2,
+                column: "Description",
+                value: "阿嬤茶櫃裡的珍藏，三代傳承的韻味與智慧");
+
+            migrationBuilder.UpdateData(
+                table: "Products",
+                keyColumn: "Id",
+                keyValue: 3,
+                column: "Description",
+                value: "老時光的慢磨咖啡，一杯喚醒阿嬤廊下的午後寧靜");
+
             migrationBuilder.CreateIndex(
                 name: "IX_UserFavorites_ApplicationUserId",
                 table: "UserFavorites",
@@ -54,6 +75,27 @@ namespace TeaTimeDemo.DataAccess.Migrations
         {
             migrationBuilder.DropTable(
                 name: "UserFavorites");
+
+            migrationBuilder.UpdateData(
+                table: "Products",
+                keyColumn: "Id",
+                keyValue: 1,
+                column: "Description",
+                value: "天然果飲，迷人多變");
+
+            migrationBuilder.UpdateData(
+                table: "Products",
+                keyColumn: "Id",
+                keyValue: 2,
+                column: "Description",
+                value: "品鐵觀音，享人生的味道");
+
+            migrationBuilder.UpdateData(
+                table: "Products",
+                keyColumn: "Id",
+                keyValue: 3,
+                column: "Description",
+                value: "用咖啡體悟休閒時光");
         }
     }
 }
