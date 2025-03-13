@@ -32,5 +32,13 @@ namespace TeaTimeDemo.Models
         public string Address { get; set; }
         [Required]
         public string Name { get; set; }
+
+
+
+
+        public string? CouponCode { get; set; }
+        public double DiscountAmount { get; set; } = 0;
+        public double OriginalOrderTotal { get; set; } // 保存原始訂單總額
+        public string? PaymentIntentId { get; set; }
     }
 }

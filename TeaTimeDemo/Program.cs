@@ -25,6 +25,16 @@ builder.Services.AddIdentity<IdentityUser,IdentityRole>(options =>
 options.SignIn.RequireConfirmedAccount = 
 true).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = $"/Identity/Account/Login";
@@ -52,6 +62,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
+
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

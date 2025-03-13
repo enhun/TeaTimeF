@@ -10,7 +10,8 @@ namespace TeaTimeDemo.Areas.Admin.Controllers
 {
     [Area("Admin")]// [修改 1] 加入 [Area("Admin")]
 
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize(Roles = $"{SD.Role_Admin},{SD.Role_Manager}")]
+
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

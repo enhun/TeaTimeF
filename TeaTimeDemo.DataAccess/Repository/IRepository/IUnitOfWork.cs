@@ -14,6 +14,8 @@
 
         IReviewRepository Review { get; }
 
+        ICouponRepository Coupon { get; }
+
 
         Task SaveAsync();
         void Save();

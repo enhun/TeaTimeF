@@ -12,17 +12,39 @@ namespace TeaTimeDemo.DataAccess.Repository
     public class OrderHeaderRepository : Repository<OrderHeader>, IOrderHeaderRepository
     {
         private ApplicationDbContext _db;
+
         public OrderHeaderRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-        // 移除這個方法，因為有拼寫錯誤 (Updata -> Update)
-        // public void UpdataStatus(int id, string status, string? paymentStatus = null)
+        public void DeleteOrder(int id)
+        {
+            try
+            {
+                // First delete related OrderDetails
+                var orderDetails = _db.OrderDetails.Where(d => d.OrderHeaderId == id).ToList();
+                if (orderDetails.Any())
+                {
+                    _db.OrderDetails.RemoveRange(orderDetails);
+                }
+
+                // Then delete OrderHeader
+                var orderHeader = _db.OrdersHeaders.FirstOrDefault(h => h.Id == id);
+                if (orderHeader != null)
+                {
+                    _db.OrdersHeaders.Remove(orderHeader);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"刪除訂單時發生錯誤: {ex.Message}", ex);
+            }
+        }
 
         public void UpdateStatus(int id, string status, string? paymentStatus = null)
         {
-            var orderFromDb = _db.OrdersHeaders.FirstOrDefault(m => m.Id == id); // 修正: OrdersHeaders -> OrderHeaders
+            var orderFromDb = _db.OrdersHeaders.FirstOrDefault(m => m.Id == id);
             if (orderFromDb != null)
             {
                 orderFromDb.OrderStatus = status;
@@ -35,18 +57,23 @@ namespace TeaTimeDemo.DataAccess.Repository
 
         public void Update(OrderHeader obj)
         {
-            _db.OrdersHeaders.Update(obj); // 修正: OrdersHeaders -> OrderHeaders
+            _db.OrdersHeaders.Update(obj);
         }
 
         public void UpdateStripePaymentID(int id, string sessionId, string paymentIntentId)
         {
-            throw new NotImplementedException();
+            var orderFromDb = _db.OrdersHeaders.FirstOrDefault(m => m.Id == id);
+            if (orderFromDb != null)
+            {
+                if (!string.IsNullOrEmpty(sessionId))
+                {
+                    orderFromDb.SessionId = sessionId;
+                }
+                if (!string.IsNullOrEmpty(paymentIntentId))
+                {
+                    orderFromDb.PaymentIntentId = paymentIntentId;
+                }
+            }
         }
-
-        // 移除這個多餘的方法，因為上面已經有完整的 UpdateStatus 實作
-        // public void UpdateStatus(int id, string statusInProcess)
-        // {
-        //     throw new NotImplementedException();
-        // }
     }
 }

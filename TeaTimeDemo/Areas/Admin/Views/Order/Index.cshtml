@@ -4,23 +4,23 @@
     var processing = "text-primary";
     var ready = "text-primary";
     var completed = "text-primary";
-    var cancelled = "text-primary";  // 新增取消狀態
+    var cancelled = "text-primary";
     var all = "text-primary";
-    switch (status)
+    switch (status.ToString().ToLower()) // 修改：增加 ToLower() 確保大小寫一致性
     {
-        case "Pending":
+        case "pending":
             pending = "active text-white bg-primary";
             break;
-        case "Processing":
+        case "processing":
             processing = "active text-white bg-primary";
             break;
-        case "Ready":
+        case "ready":
             ready = "active text-white bg-primary";
             break;
-        case "Completed":
+        case "completed":
             completed = "active text-white bg-primary";
             break;
-        case "Cancelled":  // 新增取消狀態的處理
+        case "cancelled":
             cancelled = "active text-white bg-primary";
             break;
         default:
@@ -28,8 +28,7 @@
             break;
     }
 }
-
-<div class="p-3">
+<div class="container p-3">
     <div class="d-flex justify-content-between pt-4">
         <div class="pt-2">
             <h2 class="text-primary">訂單清單 Order List</h2>
@@ -37,23 +36,23 @@
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
                 <a style="text-decoration:none;" asp-controller="Order"
-                   asp-action="Index" asp-route-status="Pending">
+                   asp-action="Index" asp-route-status="pending">
                 <li class="list-group-item @pending">等待確認訂單</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order"
-                   asp-action="Index" asp-route-status="Processing">
+                   asp-action="Index" asp-route-status="processing">
                 <li class="list-group-item @processing">訂單準備中</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order"
-                   asp-action="Index" asp-route-status="Ready">
+                   asp-action="Index" asp-route-status="ready">
                 <li class="list-group-item @ready">可取餐</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order"
-                   asp-action="Index" asp-route-status="Completed">
+                   asp-action="Index" asp-route-status="completed">
                 <li class="list-group-item @completed">已完成</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order"
-                   asp-action="Index" asp-route-status="Cancelled">
+                   asp-action="Index" asp-route-status="cancelled">
                 <li class="list-group-item @cancelled">已取消</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order"
@@ -63,21 +62,29 @@
             </ul>
         </div>
     </div>
-    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
-        <thead>
-            <tr class="align-middle">
-                <th>訂單編號</th>
-                <th>姓名</th>
-                <th>電話號碼</th>
-                <th>信箱</th>
-                <th>訂單狀態</th>
-                <th>總計金額</th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
+    <div class="row">
+        <div class="col-12">
+            <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>姓名</th>
+                        <th>電話號碼</th>
+                        <th>信箱</th>
+                        <th>訂單狀態</th>
+                        <th>總計金額</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 </div>
-
 @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <script src="~/js/order.js"></script>
 }

@@ -110,6 +110,20 @@
                                         </div>
                                     </li>
                                 }
+                                @if (!string.IsNullOrEmpty(Model.OrderHeader.CouponCode))
+                                {
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <div class="text-success">
+                                            <h6 class="my-0">優惠券折扣</h6>
+                                            <small>優惠碼: @Model.OrderHeader.CouponCode</small>
+                                        </div>
+                                        <span class="text-success">-@Model.OrderHeader.DiscountAmount.ToString("c")</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span class="text-muted">原始總額</span>
+                                        <span class="text-muted">@Model.OrderHeader.OriginalOrderTotal.ToString("c")</span>
+                                    </li>
+                                }
                                 <li class="list-group-item bg-info">
                                     <div class="row container">
                                         <div class="col-6 text-center">
@@ -149,7 +163,8 @@
                                 }
                                 @if (Model.OrderHeader.OrderStatus != SD.StatusCompleted && Model.OrderHeader.OrderStatus != SD.StatusCancelled)
                                 {
-                                    <button type="submit" asp-action"CancelOrder" class="btn btn-danger form-control my-1">取消訂單</button>
+                                    <button type="submit" asp-action="OrderCancelled" class="btn btn-danger form-control my-1">取消訂單</button>
+
                                 }
 
 

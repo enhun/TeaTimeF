@@ -222,6 +222,59 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult AddToCartAjax(ShoppingCart shoppingCart)
+        {
+            _logger.LogInformation($"AJAX加入購物車：ProductId={shoppingCart.ProductId}, Count={shoppingCart.Count}, " +
+                                  $"Ice={shoppingCart.Ice}, Sweetness={shoppingCart.Sweetness}");
+
+            if (string.IsNullOrEmpty(shoppingCart.Ice) || string.IsNullOrEmpty(shoppingCart.Sweetness))
+            {
+                // 設定預設值
+                if (string.IsNullOrEmpty(shoppingCart.Ice))
+                    shoppingCart.Ice = "正常冰 Regular Ice";
+                if (string.IsNullOrEmpty(shoppingCart.Sweetness))
+                    shoppingCart.Sweetness = "正常甜 Regular Sugar";
+            }
+
+            if (shoppingCart.Count <= 0)
+            {
+                shoppingCart.Count = 1;
+            }
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            try
+            {
+                // 確認從資料庫取得的商品資訊
+                var product = _unitOfWork.Product.Get(u => u.Id == shoppingCart.ProductId);
+                if (product == null)
+                {
+                    return Json(new { success = false, message = "找不到商品資訊" });
+                }
+
+                // 正確設定購物車項目
+                shoppingCart.ApplicationUserId = userId;
+                shoppingCart.Product = product;
+
+                AddOrUpdateCart(shoppingCart, userId);
+                _unitOfWork.Save();
+
+                // 檢查保存後的購物車數量
+                var cartItemCount = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Sum(c => c.Count);
+
+                return Json(new { success = true, message = SuccessMessage, count = cartItemCount });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "加入購物車失敗");
+                return Json(new { success = false, message = ErrorMessage });
+            }
+        }
+
         private void AddOrUpdateCart(ShoppingCart shoppingCart, string userId)
         {
             // 添加更多日誌來幫助診斷問題

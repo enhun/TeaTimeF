@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeaTimeDemo.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using TeaTimeDemo.DataAccess.Data;
 namespace TeaTimeDemo.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312022753_AllowNullPaymentIntentId")]
+    partial class AllowNullPaymentIntentId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -398,6 +401,7 @@ namespace TeaTimeDemo.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentIntentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentStatus")

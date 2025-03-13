@@ -15,6 +15,8 @@ namespace TeaTimeDemo.DataAccess.Repository
         public IOrderHeaderRepository OrderHeader { get; private set; }
         public IReviewRepository Review { get; private set; }
 
+        public ICouponRepository Coupon { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -26,6 +28,10 @@ namespace TeaTimeDemo.DataAccess.Repository
             OrderDetail = new OrderDetailRepository(_db);
             OrderHeader = new OrderHeaderRepository(_db);
             Review = new ReviewRepository(_db);
+
+            Coupon = new CouponRepository(_db);
+
+
         }
 
         public void Save()

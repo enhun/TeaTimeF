@@ -12,6 +12,8 @@ namespace TeaTimeDemo.DataAccess.Data
         {
         }
 
+        public DbSet<Coupon> Coupons { get; set; }
+
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Store> Stores { get; set; }
@@ -23,11 +25,7 @@ namespace TeaTimeDemo.DataAccess.Data
         public DbSet<OrderHeader> OrdersHeaders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
-        // TeaTimeDemo.DataAccess/Data/ApplicationDbContext.cs
-        // 在 ApplicationDbContext 類中添加：
         public DbSet<Review> Reviews { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

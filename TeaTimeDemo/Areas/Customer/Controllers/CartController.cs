@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using TeaTimeDemo.DataAccess.Repository.IRepository;
 using TeaTimeDemo.Models.ViewModels;
 using TeaTimeDemo.Models;
@@ -98,10 +99,21 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
                 }
             };
 
+            // 獲取用戶資訊
             ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
             ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAddress;
+
+            // 檢查Session中是否有優惠券資訊
+            if (HttpContext.Session.GetString("CouponCode") != null)
+            {
+                ShoppingCartVM.CouponCode = HttpContext.Session.GetString("CouponCode");
+                ShoppingCartVM.DiscountAmount = HttpContext.Session.GetDouble("DiscountAmount") ?? 0;
+                ShoppingCartVM.OrderHeader.CouponCode = ShoppingCartVM.CouponCode;
+                ShoppingCartVM.OrderHeader.DiscountAmount = ShoppingCartVM.DiscountAmount;
+                ShoppingCartVM.OrderHeader.OrderTotal = orderTotal - ShoppingCartVM.DiscountAmount;
+            }
 
             return View(ShoppingCartVM);
         }
@@ -123,19 +135,42 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
 
             ApplicationUser applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
 
-            // 重置訂單總額，確保計算正確
-            ShoppingCartVM.OrderHeader.OrderTotal = 0;
-
-            // 計算訂單總額
+            // 計算原始訂單總額
+            double originalOrderTotal = 0;
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
-                // 確保正確計算每個項目的總價 (單價 * 數量)
                 double itemTotal = cart.Product.Price * cart.Count;
-                ShoppingCartVM.OrderHeader.OrderTotal += itemTotal;
-                _logger.LogInformation($"訂單項目: {cart.Product.Name}, 單價={cart.Product.Price}, 數量={cart.Count}, 小計={itemTotal}");
+                originalOrderTotal += itemTotal;
             }
 
-            _logger.LogInformation($"最終訂單總額: {ShoppingCartVM.OrderHeader.OrderTotal}");
+            // 應用優惠券(如果有)
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("CouponCode")))
+            {
+                ShoppingCartVM.CouponCode = HttpContext.Session.GetString("CouponCode");
+                ShoppingCartVM.DiscountAmount = HttpContext.Session.GetDouble("DiscountAmount") ?? 0;
+
+                // 驗證優惠券是否仍然有效
+                if (_unitOfWork.Coupon.ValidateCoupon(ShoppingCartVM.CouponCode, originalOrderTotal))
+                {
+                    ShoppingCartVM.OrderHeader.CouponCode = ShoppingCartVM.CouponCode;
+                    ShoppingCartVM.OrderHeader.DiscountAmount = ShoppingCartVM.DiscountAmount;
+                    ShoppingCartVM.OrderHeader.OriginalOrderTotal = originalOrderTotal;
+                    ShoppingCartVM.OrderHeader.OrderTotal = originalOrderTotal - ShoppingCartVM.DiscountAmount;
+
+                    // 增加優惠券使用次數
+                    _unitOfWork.Coupon.IncrementCouponUsage(ShoppingCartVM.CouponCode);
+                }
+                else
+                {
+                    // 優惠券不再有效，重置訂單總額
+                    ShoppingCartVM.OrderHeader.OrderTotal = originalOrderTotal;
+                }
+            }
+            else
+            {
+                // 無優惠券，使用原始總額
+                ShoppingCartVM.OrderHeader.OrderTotal = originalOrderTotal;
+            }
 
             // 先保存 OrderHeader
             _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
@@ -147,16 +182,15 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
                 OrderDetail orderDetail = new()
                 {
                     ProductId = cart.ProductId,
-                    OrderHeaderId = ShoppingCartVM.OrderHeader.Id,  // 現在這個 Id 是有效的
+                    OrderHeaderId = ShoppingCartVM.OrderHeader.Id,
                     Ice = cart.Ice,
                     Sweetness = cart.Sweetness,
                     Price = cart.Product.Price,
-                    Count = cart.Count  // 確保使用正確的數量
+                    Count = cart.Count
                 };
                 _unitOfWork.OrderDetail.Add(orderDetail);
-                _logger.LogInformation($"添加訂單詳情: 產品ID={cart.ProductId}, 數量={cart.Count}");
             }
-            _unitOfWork.Save();  // 一次性保存所有 OrderDetails
+            _unitOfWork.Save();
 
             // 清空購物車
             var shoppingCarts = _unitOfWork.ShoppingCart.GetAll(
@@ -164,6 +198,10 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
             );
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
+
+            // 清除優惠券相關Session
+            HttpContext.Session.Remove("CouponCode");
+            HttpContext.Session.Remove("DiscountAmount");
 
             return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
         }
@@ -222,6 +260,114 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
             _unitOfWork.Save();
             _logger.LogInformation($"完全移除購物車項目: ID={cartId}");
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult ApplyCoupon(string couponCode)
+        {
+            // 獲取當前用戶ID
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            // 獲取購物車
+            var cartList = _unitOfWork.ShoppingCart.GetAll(
+                u => u.ApplicationUserId == userId,
+                includeProperties: "Product").ToList();
+
+            // 計算原始總額
+            double orderTotal = 0;
+            foreach (var cart in cartList)
+            {
+                orderTotal += cart.Product.Price * cart.Count;
+            }
+
+            // 檢查優惠券存在性
+            var coupon = _unitOfWork.Coupon.Get(c => c.Code.ToLower() == couponCode.ToLower());
+
+            if (coupon == null)
+            {
+                return Json(new { success = false, message = "優惠券代碼不存在" });
+            }
+
+            if (!coupon.IsActive)
+            {
+                return Json(new { success = false, message = "此優惠券已停用" });
+            }
+
+            var now = DateTime.Now;
+            if (now < coupon.StartDate)
+            {
+                return Json(new { success = false, message = $"此優惠券將於 {coupon.StartDate.ToShortDateString()} 開始生效" });
+            }
+
+            if (now > coupon.EndDate)
+            {
+                return Json(new { success = false, message = $"此優惠券已於 {coupon.EndDate.ToShortDateString()} 過期" });
+            }
+
+            if (orderTotal < coupon.MinimumAmount)
+            {
+                return Json(new { success = false, message = $"訂單金額需達 ${coupon.MinimumAmount} 才能使用此優惠券" });
+            }
+
+            if (coupon.MaxUsage.HasValue && coupon.UsedCount >= coupon.MaxUsage.Value)
+            {
+                return Json(new { success = false, message = "此優惠券已達使用次數上限" });
+            }
+
+            // 計算折扣金額
+            double discountAmount = 0;
+            if (coupon.DiscountType == "Percentage")
+            {
+                discountAmount = (orderTotal * coupon.DiscountAmount) / 100;
+            }
+            else // Fixed Amount
+            {
+                discountAmount = coupon.DiscountAmount;
+            }
+
+            // 更新Session以記住優惠券資訊
+            HttpContext.Session.SetString("CouponCode", couponCode);
+            HttpContext.Session.SetDouble("DiscountAmount", discountAmount);
+
+            // 返回成功訊息和折扣後總額
+            double finalTotal = orderTotal - discountAmount;
+            return Json(new
+            {
+                success = true,
+                message = "優惠券應用成功！",
+                total = finalTotal.ToString("c"),
+                discount = discountAmount.ToString("c")
+            });
+        }
+
+
+        [HttpPost]
+        public IActionResult RemoveCoupon()
+        {
+            // 清除優惠券相關Session
+            HttpContext.Session.Remove("CouponCode");
+            HttpContext.Session.Remove("DiscountAmount");
+
+            return RedirectToAction(nameof(Summary));
+        }
+    }
+}
+
+// 添加Session擴展方法
+namespace Microsoft.AspNetCore.Http
+{
+    public static class SessionExtensions
+    {
+        public static void SetDouble(this ISession session, string key, double value)
+        {
+            session.SetString(key, value.ToString());
+        }
+
+        public static double? GetDouble(this ISession session, string key)
+        {
+            var value = session.GetString(key);
+            return string.IsNullOrEmpty(value) ? null : (double?)double.Parse(value);
         }
     }
 }

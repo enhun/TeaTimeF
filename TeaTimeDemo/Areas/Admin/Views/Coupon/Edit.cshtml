@@ -1,0 +1,86 @@
+﻿@* TeaTimeDemo/Areas/Admin/Views/Coupon/Edit.cshtml *@
+@model Coupon
+@{
+    ViewData["Title"] = "編輯優惠券";
+}
+
+<form method="post">
+    <input asp-for="Id" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">編輯優惠券</h2>
+            <hr />
+        </div>
+        <div asp-validation-summary="All"></div>
+        <div class="mb-3">
+            <label asp-for="Code"></label>
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DiscountType"></label>
+            <select asp-for="DiscountType" class="form-control">
+                <option value="Percentage">百分比折扣</option>
+                <option value="FixedAmount">固定金額折扣</option>
+            </select>
+            <span asp-validation-for="DiscountType" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DiscountAmount"></label>
+            <input asp-for="DiscountAmount" class="form-control" />
+            <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="MinimumAmount"></label>
+            <input asp-for="MinimumAmount" class="form-control" />
+            <span asp-validation-for="MinimumAmount" class="text-danger"></span>
+        </div>
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label asp-for="StartDate"></label>
+                <input asp-for="StartDate" class="form-control" type="date" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="col-6 mb-3">
+                <label asp-for="EndDate"></label>
+                <input asp-for="EndDate" class="form-control" type="date" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="MaxUsage"></label>
+            <input asp-for="MaxUsage" class="form-control" />
+            <span asp-validation-for="MaxUsage" class="text-danger"></span>
+        </div>
+        <div class="form-check mb-3">
+            <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+            <label asp-for="IsActive" class="form-check-label"></label>
+        </div>
+        <div class="mb-3">
+            <label asp-for="UsedCount"></label>
+            <input asp-for="UsedCount" class="form-control" readonly />
+        </div>
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <button type="submit" class="btn btn-primary form-control">更新</button>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="Coupon" asp-action="Index" class="btn btn-outline-secondary form-control">
+                    返回列表
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
