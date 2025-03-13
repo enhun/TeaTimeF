@@ -40,9 +40,9 @@ namespace TeaTimeDemo.DataAccess.Data
             );
 
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "台灣水果茶", Size = "大杯", Description = "阿嬤果園的甜蜜回憶，每一口都是童年時光的滋味", Price = 60,CategoryId=1,ImageUrl="" },
-                new Product { Id = 2, Name = "鐵觀音", Size = "中杯", Description = "阿嬤茶櫃裡的珍藏，三代傳承的韻味與智慧", Price = 35, CategoryId = 2, ImageUrl = "" },
-                new Product { Id = 3, Name = "美式咖啡", Size = "中杯", Description = "老時光的慢磨咖啡，一杯喚醒阿嬤廊下的午後寧靜", Price = 50, CategoryId = 3, ImageUrl = "" }
+                new Product { Id = 1, Name = "阿嬤的果園鮮飲", Size = "大杯", Description = "阿嬤果園的甜蜜回憶，每一口都是童年時光的滋味", Price = 60,CategoryId=1,ImageUrl="" },
+                new Product { Id = 2, Name = "古厝烏龍茶", Size = "中杯", Description = "阿嬤茶櫃裡的珍藏，三代傳承的韻味與智慧", Price = 35, CategoryId = 2, ImageUrl = "" },
+                new Product { Id = 3, Name = "老時光手沖黑咖啡", Size = "中杯", Description = "老時光的慢磨咖啡，一杯喚醒阿嬤廊下的午後寧靜", Price = 50, CategoryId = 3, ImageUrl = "" }
             ); 
 
             modelBuilder.Entity<Store>().HasData(
