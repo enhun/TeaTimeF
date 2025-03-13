@@ -1,0 +1,93 @@
+﻿@* TeaTimeDemo/Areas/Customer/Views/Favorite/Index.cshtml *@
+@model IEnumerable<TeaTimeDemo.Models.UserFavorite>
+
+@{
+    ViewData["Title"] = "我的收藏";
+}
+
+<div class="container py-5">
+    <h2>我的收藏</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            您的收藏列表是空的。去 <a asp-area="Customer" asp-controller="Home" asp-action="Index">產品列表</a> 添加一些收藏吧！
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                        {
+                            <img src="@item.Product.ImageUrl" class="card-img-top" alt="@item.Product.Name">
+                        }
+                        else
+                        {
+                            <img src="/images/product-placeholder.jpg" class="card-img-top" alt="產品預設圖片">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Product.Name</h5>
+                            <p class="card-text">@item.Product.Description</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    分類: @item.Product.Category.Name
+                                </small>
+                            </p>
+                            <p class="card-text">
+                                <strong>$@item.Product.Price</strong>
+                            </p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.ProductId" class="btn btn-primary">
+                                <i class="bi bi-info-circle"></i> 查看詳情
+                            </a>
+                            <button class="btn btn-danger remove-favorite" data-product-id="@item.ProductId">
+                                <i class="bi bi-heart-fill"></i> 取消收藏
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.remove-favorite').click(function () {
+                var productId = $(this).data('product-id');
+                var card = $(this).closest('.col');
+
+                $.ajax({
+                    url: '/Customer/Favorite/Remove',
+                    type: 'POST',
+                    data: { productId: productId },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message);
+                            card.fadeOut(300, function() { $(this).remove(); });
+
+                            // 如果移除後沒有卡片，顯示空收藏訊息
+                            if ($('.col').length === 1) {
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 500);
+                            }
+                        } else {
+                            toastr.error(data.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error('處理請求時發生錯誤');
+                    }
+                });
+            });
+        });
+    </script>
+}
+

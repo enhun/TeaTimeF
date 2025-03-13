@@ -16,6 +16,8 @@
 
         ICouponRepository Coupon { get; }
 
+        IUserFavoriteRepository UserFavorite { get; }
+
 
         Task SaveAsync();
         void Save();

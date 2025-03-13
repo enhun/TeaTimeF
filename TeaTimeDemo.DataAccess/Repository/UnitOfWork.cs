@@ -17,6 +17,8 @@ namespace TeaTimeDemo.DataAccess.Repository
 
         public ICouponRepository Coupon { get; private set; }
 
+        public IUserFavoriteRepository UserFavorite { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -30,6 +32,8 @@ namespace TeaTimeDemo.DataAccess.Repository
             Review = new ReviewRepository(_db);
 
             Coupon = new CouponRepository(_db);
+
+            UserFavorite = new UserFavoriteRepository(_db);
 
 
         }

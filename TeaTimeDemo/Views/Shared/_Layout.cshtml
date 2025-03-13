@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" />
-
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <header>
@@ -64,6 +65,14 @@
                                 <span id="cart-count" class="badge bg-primary rounded-pill"></span>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Favorite" asp-action="Index">
+                                <i class="bi bi-heart"></i> 我的收藏
+                                <span id="favorite-count" class="badge bg-danger rounded-pill"></span>
+                            </a>
+                        </li>
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -87,7 +96,31 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="//cdn.datatables.net/2.2.1/js/dataTables.min.js" asp-append-version="true"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- 獲取收藏數量（僅當用戶已登入時） -->
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            $(document).ready(function() {
+                $.ajax({
+                    url: '/Customer/Favorite/GetFavoriteCount',
+                    type: 'GET',
+                    success: function(data) {
+                        if (data.count > 0) {
+                            $('#favorite-count').text(data.count);
+                        } else {
+                            $('#favorite-count').text('');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('獲取收藏數據失敗:', status, error);
+                    }
+                });
+            });
+        </script>
+    }
 
     <!-- 添加購物車數量讀取的腳本 -->
     <script>

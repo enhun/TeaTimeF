@@ -128,11 +128,16 @@
         </div>
         <div class="bg-white mt-5 mb-3">
             <div class="row align-items-center">
-                <div class="col-12 col-md-6 pb-1">
+                <div class="col-12 col-md-5 pb-1">
                     <a class="btn btn-light form-control text-primary d-flex justify-content-center align-items-center" style="height:50px;" asp-action="Index">返回列表</a>
                 </div>
-                <div class="col-12 col-md-6 pb-1">
+                <div class="col-12 col-md-5 pb-1">
                     <button type="submit" value="Add to Cart" class="btn btn-primary form-control" style="height:50px;">加入購物車</button>
+                </div>
+                <div class="col-12 col-md-2 pb-1">
+                    <button id="favorite-btn" type="button" class="btn btn-outline-danger form-control" style="height:50px;">
+                        <i id="favorite-icon" class="bi bi-heart"></i> <span id="favorite-text">收藏</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -419,6 +424,99 @@
 
             if (!$('input[name="Product.Sweetness"]:checked').val()) {
                 $('input[name="Product.Sweetness"]:first').prop('checked', true);
+            }
+
+            // 檢查產品是否已被收藏
+            var productId = @Model.Product.ProductId;
+
+            // 檢查用戶是否已收藏此產品
+            $.ajax({
+                url: '/Customer/Favorite/CheckFavorite',
+                type: 'GET',
+                data: { productId: productId },
+                success: function(data) {
+                    if (data.isFavorite) {
+                        $('#favorite-icon').removeClass('bi-heart').addClass('bi-heart-fill');
+                        $('#favorite-text').text('已收藏');
+                        $('#favorite-btn').removeClass('btn-outline-danger').addClass('btn-danger');
+                    }
+                }
+            });
+
+            // 收藏/取消收藏按鈕點擊事件
+            $('#favorite-btn').click(function() {
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <text>
+                        window.location.href = '/Identity/Account/Login';
+                        return;
+            </text>
+        }
+
+                var isFavorite = $('#favorite-icon').hasClass('bi-heart-fill');
+
+                $.ajax({
+                    url: '/Customer/Favorite/' + (isFavorite ? 'Remove' : 'Add'),
+                    type: 'POST',
+                    data: { productId: productId },
+                    success: function(data) {
+                        if (data.success) {
+                            // 使用SweetAlert2顯示提示訊息
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                            if (isFavorite) {
+                                $('#favorite-icon').removeClass('bi-heart-fill').addClass('bi-heart');
+                                $('#favorite-text').text('收藏');
+                                $('#favorite-btn').removeClass('btn-danger').addClass('btn-outline-danger');
+                            } else {
+                                $('#favorite-icon').removeClass('bi-heart').addClass('bi-heart-fill');
+                                $('#favorite-text').text('已收藏');
+                                $('#favorite-btn').removeClass('btn-outline-danger').addClass('btn-danger');
+                            }
+
+                            // 更新收藏數量
+                            updateFavoriteCount();
+                        } else {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: '處理請求時發生錯誤',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                });
+            });
+
+            // 更新收藏數量的函數
+            function updateFavoriteCount() {
+                $.ajax({
+                    url: '/Customer/Favorite/GetFavoriteCount',
+                    type: 'GET',
+                    success: function(data) {
+                        if (data.count > 0) {
+                            $('#favorite-count').text(data.count);
+                        } else {
+                            $('#favorite-count').text('');
+                        }
+                    }
+                });
             }
         });
     </script>
