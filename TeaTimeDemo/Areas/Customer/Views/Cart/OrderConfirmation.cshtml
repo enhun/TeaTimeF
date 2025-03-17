@@ -1,13 +1,35 @@
 ﻿@model int
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <!-- 懷舊風格的邊框 -->
+            <div style="border: 3px double #8B4513; background-color: #FFF8DC; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <!-- 懷舊風格的標題 -->
+                <h1 style="font-family: 'Times New Roman', serif; color: #8B4513; margin-bottom: 20px;">
+                    <span style="border-bottom: 2px dotted #8B4513; padding-bottom: 5px;">訂單送出成功</span>
+                </h1>
 
-<div class="container row pt-4">
-    <div class="col-12 text-center">
-        <h1 class="text-primary text-center">訂單送出成功</h1>
-        您的訂單編號為 : @Model <br /> <br />
-</<div>
-    <div class="col-12 text-center" style="color:maroon">
-        <br/>
-                您的訂單已成功下達! <br />
+                <!-- 訂單編號區域 -->
+                <div style="margin: 20px 0; font-family: serif;">
+                    <img src="~/images/grandma-logo.png" alt="老奶奶標誌" style="margin-bottom: 15px; width: 80px;" />
+                    <p style="font-size: 18px; color: #5F4B32;">您的訂單編號為：</p>
+                    <p style="font-size: 24px; font-weight: bold; color: #8B4513; border: 1px dashed #8B4513; display: inline-block; padding: 5px 15px; background-color: #F5F5DC;">@Model</p>
+                </div>
+
+                <!-- 成功訊息 -->
+                <div style="margin-top: 25px; padding: 15px; background-color: #F5F5DC; border-radius: 5px;">
+                    <p style="font-size: 18px; color: #8B4513; font-family: serif;">
+                        感謝您的訂購！<br />
+                        老奶奶正在用滿滿的愛心準備您的美食...<br />
+                        <span style="font-style: italic; font-size: 16px; margin-top: 10px; display: block;">就像過去美好的時光一樣，我們將用心為您服務</span>
+                    </p>
+                </div>
+
+                <!-- 返回按鈕 -->
+                <div style="margin-top: 30px;">
+                    <a href="/" style="display: inline-block; padding: 8px 20px; background-color: #8B4513; color: #FFF8DC; text-decoration: none; border-radius: 5px; font-family: serif;">返回首頁</a>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-    
+</div>
