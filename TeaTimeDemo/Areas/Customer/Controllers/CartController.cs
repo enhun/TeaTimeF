@@ -174,6 +174,17 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
 
             // 先保存 OrderHeader
             _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
+            _unitOfWork.Save();
+
+            // 新增初始的訂單狀態追蹤記錄
+            _unitOfWork.OrderHeader.AddTracking(
+                ShoppingCartVM.OrderHeader.Id,
+                SD.StatusPending,
+                "訂單已建立，等待處理中",
+                 User.Identity.Name ?? userId  // 使用用戶名稱或ID作為更新者
+
+            );
+
             _unitOfWork.Save();  // 這會產生 OrderHeader.Id
 
             // 再保存 OrderDetails
@@ -209,6 +220,8 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
         public IActionResult OrderConfirmation(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+
+            // 更新狀態但不新增追蹤記錄（因為已在SummaryPOST中新增過初始狀態記錄）
             _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusPending);
             _unitOfWork.Save();
 

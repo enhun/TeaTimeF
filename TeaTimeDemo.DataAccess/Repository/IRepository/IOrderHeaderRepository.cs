@@ -15,6 +15,9 @@ namespace TeaTimeDemo.DataAccess.Repository.IRepository
 
         void DeleteOrder(int id); // 新增刪除訂單的方法
 
+        void AddTracking(int orderId, string status, string comments, string updatedBy);
+        List<OrderTracking> GetOrderTrackingHistory(int orderId);
+
     }
 
 }

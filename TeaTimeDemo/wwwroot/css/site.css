@@ -20,3 +20,160 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* 訂單狀態進度條樣式 */
+.progress-track {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.progressbar {
+    counter-reset: step;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+    .progressbar li {
+        list-style-type: none;
+        width: 25%;
+        position: relative;
+        text-align: center;
+        color: #7d7d7d;
+        font-size: 0.9rem;
+        padding-top: 5px;
+    }
+
+        .progressbar li i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .progressbar li:before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            line-height: 30px;
+            display: block;
+            background: #ddd;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .progressbar li:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            top: -14px;
+            left: -50%;
+            z-index: -1;
+        }
+
+        .progressbar li:first-child:after {
+            content: none;
+        }
+
+        .progressbar li.active {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+            .progressbar li.active:before {
+                background: #3498db;
+                box-shadow: 0 0 5px 1px #3498db;
+            }
+
+            .progressbar li.active:after {
+                background: #3498db;
+            }
+
+/* 訂單追蹤進度樣式 */
+.order-track {
+    position: relative;
+    margin: 30px auto 20px;
+    padding: 0 1rem;
+}
+
+.order-track-step {
+    display: flex;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+    .order-track-step:last-child {
+        margin-bottom: 0;
+    }
+
+    .order-track-step::after {
+        content: "";
+        position: absolute;
+        left: 15px;
+        top: 25px;
+        bottom: -15px;
+        width: 2px;
+        background: #e5e5e5;
+    }
+
+    .order-track-step:last-child::after {
+        display: none;
+    }
+
+.order-track-status {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.order-track-status-inner {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.order-track-status.completed {
+    background: #28a745;
+}
+
+    .order-track-status.completed .order-track-status-inner {
+        background: #28a745;
+    }
+
+.order-track-status.active {
+    background: #3498db;
+}
+
+    .order-track-status.active .order-track-status-inner {
+        background: #fff;
+    }
+
+.order-track-text {
+    flex: 1;
+}
+
+.order-track-text-stat {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.order-track-text-time {
+    font-size: 14px;
+    color: #717171;
+}
+

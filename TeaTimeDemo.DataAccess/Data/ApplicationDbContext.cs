@@ -29,6 +29,10 @@ namespace TeaTimeDemo.DataAccess.Data
 
         public DbSet<UserFavorite> UserFavorites { get; set; }
 
+
+        public DbSet<OrderTracking> OrderTrackings { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -1,5 +1,6 @@
-﻿@model OrderVM
-@using TeaTimeDemo.Utility
+﻿@using TeaTimeDemo.Models.ViewModels
+<!-- Areas/Customer/Views/Order/Details.cshtml -->
+@model OrderVM
 
 <form method="post">
     <input asp-for="OrderHeader.Id" hidden />
@@ -9,10 +10,10 @@
             <div class="card-header bg-dark text-light ml-0">
                 <div class="container row">
                     <div class="col-12 d-none d-md-block col-md-6 p-2">
-                        <i class="fas fa-shopping-cart"></i> &nbsp; 訂單總計 Order Summary
+                        <i class="fas fa-shopping-cart"></i> &nbsp; 訂單詳情
                     </div>
                     <div class="col-12 col-md-4 offset-md-2 text-right p-2">
-                        <a asp-action="Index" class="btn btn-outline-info form-control btn-sm">回訂單列 Back to Orders</a>
+                        <a asp-action="Index" class="btn btn-outline-info form-control btn-sm">回訂單列表</a>
                     </div>
                 </div>
             </div>
@@ -22,82 +23,47 @@
                         <div class="col-12 col-lg-6 pb-4">
                             <div class="row">
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-primary">訂購人資訊 PickUp Details:</span>
+                                    <span class="text-primary">訂購人資訊:</span>
                                 </h4>
                             </div>
                             <div class="row my-1">
-                                <div class="col-4">姓名 Name</div>
+                                <div class="col-4">姓名</div>
                                 <div class="col-8">
-                                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Manager))
-                                    {
-                                        <input asp-for="OrderHeader.Name" type="text" class="form-control" />
-                                        <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="OrderHeader.Name" readonly type="text" class="form-control" />
-                                    }
+                                    <input asp-for="OrderHeader.Name" readonly type="text" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-4">手機 Phone</div>
+                                <div class="col-4">手機</div>
                                 <div class="col-8">
-                                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Manager))
-                                    {
-                                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
-                                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control" />
-                                    }
+                                    <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-4">地址 Address</div>
+                                <div class="col-4">地址</div>
                                 <div class="col-8">
-                                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Manager))
-                                    {
-                                        <input asp-for="OrderHeader.Address" type="text" class="form-control" />
-                                        <span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="OrderHeader.Address" readonly type="text" class="form-control" />
-                                    }
-                                </div>
-                            </div>
-
-                            <div class="row my-1">
-                                <div class="col-4">信箱 Email</div>
-                                <div class="col-8">
-                                    <input asp-for="OrderHeader.ApplicationUser.Email" readonly type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.Address" readonly type="text" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-4">訂購日期 Order Date</div>
+                                <div class="col-4">訂購日期</div>
                                 <div class="col-8">
                                     <input value="@Model.OrderHeader.OrderDate.ToShortDateString()" type="text" class="form-control" readonly />
                                 </div>
                             </div>
-                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Manager))
-                            {
-                                <button type="submit" asp-action="UpdateOrderDetail" class="btn btn-warning form-control my-1">修改訂單資訊 Update Order Details</button>
-                            }
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-primary">訂購內容 Order Summary</span>
+                                <span class="text-primary">訂購內容</span>
                             </h4>
-                            <label class="btn btn-outline-primary form-control my-2">訂單狀態 Order Status - @Model.OrderHeader.OrderStatus</label>
+                            <label class="btn btn-outline-primary form-control my-2">訂單狀態 - @Model.OrderHeader.OrderStatus</label>
 
                             <ul class="list-group mb-3">
+
                                 @foreach (var detail in Model.OrderDetail)
                                 {
                                     <li class="list-group-item d-flex justify-content-between p-2">
                                         <div class="row container">
                                             <div class="col-8">
-
                                                 <h6 class="my-0 text-primary">@detail.Product.Name</h6>
                                                 <small class="text-muted">價格：@detail.Price.ToString("c")</small><br />
                                                 <small class="text-muted">數量：@detail.Count</small><br />
@@ -127,7 +93,7 @@
                                 <li class="list-group-item bg-info">
                                     <div class="row container">
                                         <div class="col-6 text-center">
-                                            <h5 class="text-white">總計 TOTAL </h5>
+                                            <h5 class="text-white">總計</h5>
                                         </div>
                                         <div class="col-6 text-center">
                                             <h5 class="text-white">@Model.OrderHeader.OrderTotal.ToString("c")</h5>
@@ -135,42 +101,37 @@
                                     </div>
                                 </li>
                             </ul>
-
-                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Manager))
-                            {
-                                @if (Model.OrderHeader.OrderStatus == SD.StatusPending)
-                                {
-                                    <button type="submit" asp-action="StartProcessing" class="btn btn-primary
-                                    form-control my-1">
-                                        接受訂單
-                                    </button>
-
-                                }
-                                @if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
-                                {
-                                    <button type="submit" asp-action="OrderReady" class="btn btn-primary
-                                      form-control my-1">
-                                        製作完成(通知顧客取餐)
-                                    </button>
-
-                                }
-                                @if (Model.OrderHeader.OrderStatus == SD.StatusReady)
-                                {
-                                    <button type="submit" asp-action="OrderCompleted"
-                                            class="btn btn-primary form-control my-1">
-                                        確認付款(訂單完成)
-                                    </button>
-                                }
-                                @if (Model.OrderHeader.OrderStatus != SD.StatusCompleted && Model.OrderHeader.OrderStatus != SD.StatusCancelled)
-                                {
-                                    <button type="submit" asp-action="OrderCancelled" class="btn btn-danger form-control my-1">取消訂單</button>
-
-                                }
-                            }
                         </div>
                     </div>
 
-                    <!-- 訂單追蹤歷史部分 -->
+                    <!-- 訂單狀態追蹤區域 -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4 class="text-primary">訂單狀態追蹤</h4>
+                            <div class="row mt-3 mb-4">
+                                <div class="col-12">
+                                    <div class="progress-track">
+                                        <ul class="progressbar">
+                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "待處理" || Model.OrderHeader.OrderStatus == "處理中" || Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
+                                                <i class="bi bi-clipboard-check"></i><br />訂單已下單
+                                            </li>
+                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "處理中" || Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
+                                                <i class="bi bi-gear"></i><br />訂單製作中
+                                            </li>
+                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
+                                                <i class="bi bi-cup-hot"></i><br />可取餐
+                                            </li>
+                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
+                                                <i class="bi bi-check-circle"></i><br />訂單完成
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 新增加的訂單追蹤歷史卡片式顯示 -->
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card">
@@ -185,6 +146,27 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 原訂單追蹤歷史紀錄（表格式顯示） -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4 class="text-primary">訂單追蹤歷史</h4>
+                            <div class="table-responsive">
+                                <table id="trackingHistory" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>狀態</th>
+                                            <th>時間</th>
+                                            <th>說明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 將通過JavaScript動態加載 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -195,12 +177,65 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
+            loadTrackingHistory(@Model.OrderHeader.Id);
             loadOrderTracking(@Model.OrderHeader.Id);
         });
 
+        function loadTrackingHistory(orderId) {
+            $.ajax({
+                url: `/Customer/Order/GetOrderTrackingHistory?orderId=${orderId}`,
+                type: "GET",
+                success: function (response) {
+                    var table = $("#trackingHistory tbody");
+                    table.empty();
+
+                    $.each(response.data, function (index, item) {
+                        // 為不同狀態添加不同的顏色和圖標
+                        var statusClass = "";
+                        var statusIcon = "";
+
+                        switch(item.status) {
+                            case "待處理":
+                                statusClass = "text-warning";
+                                statusIcon = "<i class='bi bi-clock'></i> ";
+                                break;
+                            case "處理中":
+                                statusClass = "text-info";
+                                statusIcon = "<i class='bi bi-gear'></i> ";
+                                break;
+                            case "可取餐":
+                                statusClass = "text-primary";
+                                statusIcon = "<i class='bi bi-cup-hot'></i> ";
+                                break;
+                            case "已完成":
+                                statusClass = "text-success";
+                                statusIcon = "<i class='bi bi-check-circle'></i> ";
+                                break;
+                            case "已取消":
+                                statusClass = "text-danger";
+                                statusIcon = "<i class='bi bi-x-circle'></i> ";
+                                break;
+                        }
+
+                        var row = `<tr>
+                            <td><span class="${statusClass}">${statusIcon}${item.status}</span></td>
+                            <td>${new Date(item.statusDate).toLocaleString()}</td>
+                            <td>${item.comments || ''}</td>
+                        </tr>`;
+
+                        table.append(row);
+                    });
+                },
+                error: function (err) {
+                    console.error("獲取訂單追蹤歷史失敗:", err);
+                    toastr.error("無法載入訂單追蹤歷史");
+                }
+            });
+        }
+
         function loadOrderTracking(orderId) {
             $.ajax({
-                url: `/Admin/Order/GetOrderTrackingHistory?orderId=${orderId}`,
+                url: `/Customer/Order/GetOrderTrackingHistory?orderId=${orderId}`,
                 type: 'GET',
                 success: function(response) {
                     if(response.data && response.data.length > 0) {

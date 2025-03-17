@@ -108,6 +108,15 @@ namespace TeaTimeDemo.Areas.Admin.Controllers
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 
+
+        // 添加獲取訂單追蹤歷史的方法
+        public IActionResult GetOrderTrackingHistory(int orderId)
+        {
+            var trackingHistory = _unitOfWork.OrderHeader.GetOrderTrackingHistory(orderId);
+            return Json(new { data = trackingHistory });
+        }
+
+
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee + "," + SD.Role_Manager)]
         public IActionResult OrderReady()
