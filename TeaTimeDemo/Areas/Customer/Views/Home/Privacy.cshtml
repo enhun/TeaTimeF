@@ -1,6 +1,280 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "隱私權政策";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="privacy-container">
+    <div class="vintage-frame">
+        <div class="polaroid">
+            <div class="photo-frame">
+                <div class="retro-pattern"></div>
+                <div class="content-paper">
+                    <div class="paper-header">
+                        <h1 class="vintage-title">隱私權政策</h1>
+                        <div class="time-stamp">
+                            <i class="bi bi-hourglass"></i>
+                            <span>生效日期：2025年1月1日</span>
+                        </div>
+                    </div>
+
+                    <div class="paper-content">
+                        <p class="handwritten">親愛的顧客們：</p>
+
+                        <p>感謝您光臨「老奶奶的懷舊時光」，這裡承載著我們對過去美好時光的緬懷。正如我們珍視那些珍貴回憶一般，我們也非常重視您的個人隱私。</p>
+
+                        <div class="section">
+                            <h3 class="section-title"><i class="bi bi-collection"></i> 我們收集的資訊</h3>
+                            <p>當您造訪我們的網站或實體店面時，我們可能會收集以下資訊：</p>
+                            <ul class="handwritten-list">
+                                <li>基本聯絡資訊（如姓名、電子郵件）</li>
+                                <li>購物偏好及歷史訂單</li>
+                                <li>網站瀏覽行為</li>
+                                <li>您分享的回憶故事（若您選擇分享）</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h3 class="section-title"><i class="bi bi-stars"></i> 資訊的使用方式</h3>
+                            <p>就像老奶奶總是用心保存家族食譜一樣，我們也會謹慎使用您的資訊：</p>
+                            <ul class="handwritten-list">
+                                <li>提供更個人化的購物體驗</li>
+                                <li>通知您關於新品與特別活動</li>
+                                <li>改善我們的產品與服務</li>
+                                <li>建立懷舊社群，分享集體記憶</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h3 class="section-title"><i class="bi bi-shield-lock"></i> 資訊保護措施</h3>
+                            <p>正如我們珍藏的古董一般，我們用心保護您的資訊：</p>
+                            <ul class="handwritten-list">
+                                <li>採用加密技術保護資料傳輸</li>
+                                <li>定期檢視並更新安全措施</li>
+                                <li>限制員工存取客戶資料的權限</li>
+                                <li>絕不會出售您的個人資料給第三方</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h3 class="section-title"><i class="bi bi-chat-quote"></i> 聯絡我們</h3>
+                            <p>如果您對我們的隱私權政策有任何疑問，就像老奶奶總是樂於傾聽一樣，我們隨時歡迎您的回饋：</p>
+                            <div class="contact-info">
+                                <p><i class="bi bi-envelope-heart"></i> Email: privacy@grandmanostalgia.com</p>
+                                <p><i class="bi bi-telephone-outbound"></i> 電話: (02) 2345-6789</p>
+                            </div>
+                        </div>
+
+                        <div class="grandma-signature">
+                            <p>溫馨問候，</p>
+                            <p class="signature">老奶奶的懷舊時光 團隊</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="polaroid-footer">
+                <i class="bi bi-clock-history"></i> 讓回憶永存，同時守護您的隱私
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* 整體懷舊風格設定 */
+        body {
+            background-color: #f9f3e9;
+            color: #5a4a42;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .privacy-container {
+            padding: 2rem 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 懷舊相框風格 */
+        .vintage-frame {
+            background-color: #e8d8c3;
+            border: 15px solid #9b8569;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* 寶麗來相片風格 */
+        .polaroid {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px 20px 60px 20px;
+            position: relative;
+        }
+
+        .photo-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+
+        .retro-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 20.83l2.83-2.83 1.41 1.41L1.41 22.24H0v-1.41zM22.24 0v1.41l2.83 2.83-1.41 1.41L20.83 0H22.24zm1.41 18.41l2.83 2.83-1.41 1.41-2.83-2.83v-1.41h1.41zM40 20.83l-2.83-2.83-1.41 1.41 2.83 2.83H40v-1.41zM40 38.59l-2.83-2.83-1.41 1.41 2.83 2.83H40v-1.41zM17.76 40v-1.41l-2.83-2.83 1.41-1.41 2.83 2.83V40h-1.41zm-1.41-18.41l-2.83-2.83 1.41-1.41 2.83 2.83v1.41h-1.41zM20 18.41l2.83-2.83 1.41 1.41L21.41 20H20v-1.59zm-8.83 0l-1.41-1.41-2.83 2.83V20h1.41l2.83-2.83zM0 1.41l2.83 2.83-1.41 1.41L0 2.83V1.41zm18.41 8.83l-1.41-1.41-2.83 2.83v1.41h1.41l2.83-2.83zm20 0l-1.41-1.41-2.83 2.83v1.41h1.41l2.83-2.83zM0 17.17l1.41-1.41 2.83 2.83L2.83 20H0v-2.83zm8.83-8.83L7.42 6.93 4.59 9.76 6 11.17l2.83-2.83zm10 0l-1.41-1.41-2.83 2.83 1.41 1.41 2.83-2.83zm10 0l-1.41-1.41-2.83 2.83 1.41 1.41 2.83-2.83zM18.41 0l-1.41 1.41 2.83 2.83L21.41 0h-3z'/%3E%3C/g%3E%3C/svg%3E");
+            z-index: 0;
+        }
+
+        /* 老紙張效果 */
+        .content-paper {
+            background-color: #fff9e6;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 70vh;
+            background-image: linear-gradient(rgba(179, 162, 127, 0.1) 1px, transparent 1px);
+            background-size: 100% 32px;
+        }
+
+        /* 標題樣式 */
+        .vintage-title {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            color: #854442;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            border-bottom: 2px dotted #ca9e92;
+            padding-bottom: 0.5rem;
+        }
+
+        /* 時間戳記樣式 */
+        .time-stamp {
+            text-align: right;
+            font-style: italic;
+            color: #847469;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 手寫風格文字 */
+        .handwritten {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 1.5rem;
+            color: #5b4636;
+            margin-bottom: 1.5rem;
+        }
+
+        .paper-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #5a4a42;
+        }
+
+            .paper-content p {
+                margin-bottom: 1.5rem;
+            }
+
+        /* 段落區塊樣式 */
+        .section {
+            margin-bottom: 2rem;
+            padding-left: 1rem;
+            border-left: 3px solid #d9c3a9;
+        }
+
+        .section-title {
+            font-family: 'Georgia', serif;
+            color: #854442;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 手寫風格列表 */
+        .handwritten-list {
+            list-style-type: none;
+            padding-left: 2rem;
+        }
+
+            .handwritten-list li {
+                margin-bottom: 0.8rem;
+                position: relative;
+            }
+
+                .handwritten-list li:before {
+                    content: "✿";
+                    position: absolute;
+                    left: -1.5rem;
+                    color: #ca9e92;
+                }
+
+        /* 聯絡資訊區域 */
+        .contact-info {
+            background-color: rgba(245, 235, 220, 0.5);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+            .contact-info p {
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        /* 簽名區域 */
+        .grandma-signature {
+            margin-top: 3rem;
+            text-align: right;
+        }
+
+        .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 1.8rem;
+            color: #854442;
+        }
+
+        /* 寶麗來底部 */
+        .polaroid-footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #847469;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 響應式調整 */
+        @@media (max-width: 768px) {
+            .vintage-frame {
+                padding: 1rem;
+                border-width: 10px;
+            }
+
+            .content-paper {
+                padding: 1.5rem;
+            }
+
+            .vintage-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+}
