@@ -1,33 +1,31 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
-
-/* 訂單狀態進度條樣式 */
+/* 訂單狀態進度條樣式 /
 .progress-track {
     width: 100%;
     margin: 0 auto;
     padding: 0 20px;
 }
-
 .progressbar {
     counter-reset: step;
     margin: 0;
@@ -35,7 +33,6 @@ body {
     display: flex;
     justify-content: space-between;
 }
-
     .progressbar li {
         list-style-type: none;
         width: 25%;
@@ -45,12 +42,10 @@ body {
         font-size: 0.9rem;
         padding-top: 5px;
     }
-
         .progressbar li i {
             font-size: 1.5rem;
             margin-bottom: 5px;
         }
-
         .progressbar li:before {
             content: '';
             width: 12px;
@@ -65,7 +60,6 @@ body {
             left: 50%;
             transform: translateX(-50%);
         }
-
         .progressbar li:after {
             content: '';
             position: absolute;
@@ -76,26 +70,21 @@ body {
             left: -50%;
             z-index: -1;
         }
-
         .progressbar li:first-child:after {
             content: none;
         }
-
         .progressbar li.active {
             color: #3498db;
             font-weight: bold;
         }
-
             .progressbar li.active:before {
                 background: #3498db;
                 box-shadow: 0 0 5px 1px #3498db;
             }
-
             .progressbar li.active:after {
                 background: #3498db;
             }
-
-/* 訂單追蹤進度樣式 */
+/ 訂單追蹤進度樣式 */
 .order-track {
     position: relative;
     margin: 30px auto 20px;
@@ -176,4 +165,3 @@ body {
     font-size: 14px;
     color: #717171;
 }
-

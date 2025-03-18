@@ -132,7 +132,7 @@
                     <a class="btn btn-light form-control text-primary d-flex justify-content-center align-items-center" style="height:50px;" asp-action="Index">返回列表</a>
                 </div>
                 <div class="col-12 col-md-5 pb-1">
-                    <button type="submit" value="Add to Cart" class="btn btn-primary form-control" style="height:50px;">加入購物車</button>
+                    <button type="submit" value="Add to Cart" class="btn btn-primary form-control" style="height:50px;" id="add-to-cart-btn">加入購物車</button>
                 </div>
                 <div class="col-12 col-md-2 pb-1">
                     <button id="favorite-btn" type="button" class="btn btn-outline-danger form-control" style="height:50px;">
@@ -322,76 +322,92 @@
             // 移除原本的表單提交事件，改用AJAX
             $('#addToCartForm').on('submit', function(e) {
                 e.preventDefault(); // 阻止表單提交
-
-                // 獲取必要的值
-                var productId = $('input[name="Product.ProductId"]').val();
-                var countValue = parseInt($('#product-count').val());
-                var iceSelected = $('input[name="Product.Ice"]:checked').val();
-                var sweetnessSelected = $('input[name="Product.Sweetness"]:checked').val();
-
-                console.log('AJAX準備提交');
-                console.log('ProductId:', productId);
-                console.log('Count:', countValue);
-                console.log('Ice selected:', iceSelected);
-                console.log('Sweetness selected:', sweetnessSelected);
-
-                // 驗證數量
-                if (countValue <= 0 || isNaN(countValue)) {
-                    alert('請選擇至少一個數量');
-                    return false;
+                
+                // 檢查用戶是否已登入
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <text>
+                        // 未登入，重定向到登入頁面
+                        window.location.href = '/Identity/Account/Login?returnUrl=' + encodeURIComponent(window.location.pathname + window.location.search);
+                        return false;
+                    </text>
                 }
+                else
+                {
+                    <text>
+                        // 已登入，繼續處理加入購物車的邏輯
+                        
+                        // 獲取必要的值
+                        var productId = $('input[name="Product.ProductId"]').val();
+                        var countValue = parseInt($('#product-count').val());
+                        var iceSelected = $('input[name="Product.Ice"]:checked').val();
+                        var sweetnessSelected = $('input[name="Product.Sweetness"]:checked').val();
 
-                // 驗證冰量
-                if (!iceSelected) {
-                    alert('請選擇冰量');
-                    return false;
-                }
+                        console.log('AJAX準備提交');
+                        console.log('ProductId:', productId);
+                        console.log('Count:', countValue);
+                        console.log('Ice selected:', iceSelected);
+                        console.log('Sweetness selected:', sweetnessSelected);
 
-                // 驗證甜度
-                if (!sweetnessSelected) {
-                    alert('請選擇甜度');
-                    return false;
-                }
+                        // 驗證數量
+                        if (countValue &lt;= 0 || isNaN(countValue)) {
+                           alert('請選擇至少一個數量');
+                           return false;
+                            }
 
-                // 準備要發送的數據
-                var formData = {
-                    ProductId: productId,
-                    Count: countValue,
-                    Ice: iceSelected,
-                    Sweetness: sweetnessSelected,
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                };
-
-                // 發送AJAX請求
-                $.ajax({
-                    url: '/Customer/Home/AddToCartAjax',
-                    type: 'POST',
-                    data: formData,
-                    success: function(result) {
-                        if (result.success) {
-                            // 顯示成功訊息
-                            var toastEl = $('#liveToast');
-                            toastEl.find('.toast-body').text(result.message);
-                            var toast = new bootstrap.Toast(toastEl);
-                            toast.show();
-
-                            // 更新購物車數量
-                            loadCartCount();
-                        } else {
-                            // 顯示錯誤訊息
-                            var toastEl = $('#liveToast');
-                            toastEl.find('.toast-body').text(result.message);
-                            var toast = new bootstrap.Toast(toastEl);
-                            toast.show();
+                        // 驗證冰量
+                        if (!iceSelected) {
+                            alert('請選擇冰量');
+                            return false;
                         }
-                    },
-                    error: function() {
-                        var toastEl = $('#liveToast');
-                        toastEl.find('.toast-body').text('加入購物車失敗，請稍後再試');
-                        var toast = new bootstrap.Toast(toastEl);
-                        toast.show();
-                    }
-                });
+
+                        // 驗證甜度
+                        if (!sweetnessSelected) {
+                            alert('請選擇甜度');
+                            return false;
+                        }
+
+                        // 準備要發送的數據
+                        var formData = {
+                            ProductId: productId,
+                            Count: countValue,
+                            Ice: iceSelected,
+                            Sweetness: sweetnessSelected,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        };
+
+                        // 發送AJAX請求
+                        $.ajax({
+                            url: '/Customer/Home/AddToCartAjax',
+                            type: 'POST',
+                            data: formData,
+                            success: function(result) {
+                                if (result.success) {
+                                    // 顯示成功訊息
+                                    var toastEl = $('#liveToast');
+                                    toastEl.find('.toast-body').text(result.message);
+                                    var toast = new bootstrap.Toast(toastEl);
+                                    toast.show();
+
+                                    // 更新購物車數量
+                                    loadCartCount();
+                                } else {
+                                    // 顯示錯誤訊息
+                                    var toastEl = $('#liveToast');
+                                    toastEl.find('.toast-body').text(result.message);
+                                    var toast = new bootstrap.Toast(toastEl);
+                                    toast.show();
+                                }
+                            },
+                            error: function() {
+                                var toastEl = $('#liveToast');
+                                toastEl.find('.toast-body').text('加入購物車失敗，請稍後再試');
+                                var toast = new bootstrap.Toast(toastEl);
+                                toast.show();
+                            }
+                        });
+                    </text>
+                }
             });
 
             // 記錄AJAX錯誤
