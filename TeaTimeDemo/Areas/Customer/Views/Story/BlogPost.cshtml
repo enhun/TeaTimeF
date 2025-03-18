@@ -1,0 +1,84 @@
+﻿<!-- TeaTimeDemo/Areas/Customer/Views/Story/BlogPost.cshtml -->
+@model TeaTimeDemo.Models.Story
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow vintage-blog-detail">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" class="card-img-top vintage-blog-detail-img" alt="@Model.Title">
+                }
+                <div class="card-body p-4">
+                    <h1 class="mb-3 vintage-blog-detail-title">@Model.Title</h1>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="vintage-blog-detail-meta">
+                            <i class="bi bi-calendar3"></i> @Model.CreatedDate.ToString("yyyy年MM月dd日")
+                        </div>
+                        <div>
+                            <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> 返回列表
+                            </a>
+                        </div>
+                    </div>
+
+                    <hr class="vintage-divider">
+
+                    <div class="vintage-blog-detail-content mt-4">
+                        @Html.Raw(Model.Content)
+                    </div>
+
+                    <hr class="vintage-divider mt-5">
+
+                    <div class="text-center mt-4">
+                        <a asp-action="Blog" class="btn btn-outline-primary">
+                            <i class="bi bi-journal-text"></i> 查看更多文章
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .vintage-blog-detail {
+        border-radius: 12px;
+        border: 1px solid #e5d3b3;
+        background-color: #fff9e6;
+        overflow: hidden;
+    }
+
+    .vintage-blog-detail-img {
+        height: 400px;
+        object-fit: cover;
+        border-bottom: 1px dashed #d9b38c;
+    }
+
+    .vintage-blog-detail-title {
+        font-family: 'Times New Roman', serif;
+        color: #8B4513;
+    }
+
+    .vintage-blog-detail-meta {
+        color: #a17d5d;
+        font-style: italic;
+    }
+
+    .vintage-blog-detail-content {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        white-space: pre-line;
+    }
+
+    .vintage-divider {
+        border-top: 1px dashed #d9b38c;
+        margin: 20px 0;
+    }
+</style>
+

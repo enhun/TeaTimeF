@@ -29,22 +29,24 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
             _cache = cache;
         }
 
+        // 更新 TeaTimeDemo/Areas/Customer/Controllers/HomeController.cs 中的 Index 方法
         public IActionResult Index(string category, string search)
         {
-            // 註解掉快取相關程式碼
-            /*string cacheKey = $"ProductList_{category}_{search}";
-            if (!_cache.TryGetValue(cacheKey, out IEnumerable<Product> productList))
-            {*/
+            // 原有的產品查詢代碼保持不變
             var productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
             if (!string.IsNullOrEmpty(category))
                 productList = productList.Where(p => p.Category?.Name == category);
             if (!string.IsNullOrEmpty(search))
                 productList = productList.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
-            /*_cache.Set(cacheKey, productList, TimeSpan.FromMinutes(10));
-        }*/
+
+            // 獲取精選故事
+            ViewBag.FeaturedStories = _unitOfWork.Story.GetFeaturedStories().Take(3);
+
             return View(productList);
         }
 
+
+        // 更新 TeaTimeDemo/Areas/Customer/Controllers/HomeController.cs 中的 Details 方法
         public IActionResult Details(int productId)
         {
             var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
@@ -56,8 +58,8 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
                 Product = product,
                 Count = 1,
                 ProductId = productId,
-                Ice = "正常冰 Regular Ice",     // 設定預設值
-                Sweetness = "正常甜 Regular Sugar" // 設定預設值
+                Ice = "正常冰 Regular Ice",
+                Sweetness = "正常甜 Regular Sugar"
             };
 
             IEnumerable<Review> reviews = new List<Review>();
@@ -67,15 +69,17 @@ namespace TeaTimeDemo.Areas.Customer.Controllers
             }
             catch (Exception ex)
             {
-                // 處理可能的錯誤，比如 Reviews 表不存在
                 _logger.LogError(ex, "獲取評論失敗");
             }
 
+            // 新增：取得產品相關的故事
+            var productStories = _unitOfWork.Story.GetAll(s => s.ProductId == productId && s.StoryType == 1);
 
             var viewModel = new ProductDetailsViewModel
             {
-                Product = cart,  // 修正: 使用 Product 屬性而不是 ShoppingCart 屬性
-                Reviews = reviews
+                Product = cart,
+                Reviews = reviews,
+                ProductStories = productStories // 新增屬性
             };
 
             int categoryId = product.Category?.Id ?? 0;

@@ -18,6 +18,10 @@
 
         IUserFavoriteRepository UserFavorite { get; }
 
+        IStoryRepository Story { get; }
+
+
+
 
         Task SaveAsync();
         void Save();

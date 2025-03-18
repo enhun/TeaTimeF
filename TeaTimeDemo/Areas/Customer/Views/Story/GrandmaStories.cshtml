@@ -1,0 +1,77 @@
+﻿<!-- TeaTimeDemo/Areas/Customer/Views/Story/GrandmaStories.cshtml -->
+@model IEnumerable<TeaTimeDemo.Models.Story>
+
+@{
+    ViewData["Title"] = "老奶奶的故事";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-light p-4 rounded shadow-sm text-center border-bottom border-3 border-warning">
+                <h1 class="display-4 text-primary">老奶奶的故事</h1>
+                <p class="lead">這裡收藏了老奶奶的回憶以及飲品的故事起源，每一杯飲品背後都有一段難忘的回憶。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var story in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100 vintage-card">
+                    <div class="card-header vintage-header">
+                        @if (story.IsFeatured)
+                        {
+                            <span class="badge bg-primary float-end">精選故事</span>
+                        }
+                    </div>
+                    @if (!string.IsNullOrEmpty(story.ImageUrl))
+                    {
+                        <img src="@story.ImageUrl" class="card-img-top vintage-img" alt="@story.Title">
+                    }
+                    <div class="card-body vintage-body">
+                        <h5 class="card-title">@story.Title</h5>
+                        <p class="card-text text-muted">
+                            @(story.Content.Length > 100 ? story.Content.Substring(0, 100) + "..." : story.Content)
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="StoryDetail" asp-route-id="@story.Id" class="btn btn-outline-primary stretched-link">閱讀更多</a>
+                            <small class="text-muted">@story.CreatedDate.ToString("yyyy年MM月dd日")</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .vintage-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        transition: all 0.3s;
+        background-color: #fff9e6;
+    }
+
+        .vintage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .vintage-header {
+        background-color: #f8e8ce;
+        border-bottom: 1px dashed #d9b38c;
+    }
+
+    .vintage-body {
+        font-family: serif;
+    }
+
+    .vintage-img {
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #e5d3b3;
+    }
+</style>
+

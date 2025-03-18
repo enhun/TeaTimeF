@@ -1,0 +1,159 @@
+﻿<!-- TeaTimeDemo/Areas/Customer/Views/Story/Blog.cshtml -->
+@model IEnumerable<TeaTimeDemo.Models.Story>
+
+@{
+    ViewData["Title"] = "懷舊時光部落格";
+}
+
+<div class="container mt-4">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="p-4 text-center vintage-blog-header">
+                <h1 class="display-4">懷舊時光部落格</h1>
+                <p class="lead">分享老奶奶的智慧和飲品的故事</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            @if (Model.Any())
+            {
+                foreach (var post in Model)
+                {
+                    <div class="card mb-4 shadow-sm vintage-blog-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                @if (!string.IsNullOrEmpty(post.ImageUrl))
+                                {
+                                    <img src="@post.ImageUrl" class="img-fluid rounded-start h-100 vintage-blog-img" alt="@post.Title">
+                                }
+                                else
+                                {
+                                    <div class="vintage-blog-placeholder d-flex align-items-center justify-content-center h-100">
+                                        <i class="bi bi-journal-text display-4"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title vintage-blog-title">@post.Title</h5>
+                                    <p class="card-text">
+                                        @(post.Content.Length > 200 ? post.Content.Substring(0, 200) + "..." : post.Content)
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a asp-action="BlogPost" asp-route-id="@post.Id" class="btn btn-sm btn-outline-primary">閱讀文章</a>
+                                        </div>
+                                        <small class="text-muted">@post.CreatedDate.ToString("yyyy/MM/dd")</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center my-5">
+                    <i class="bi bi-journal-x display-4 text-muted"></i>
+                    <h3 class="mt-3">目前沒有文章</h3>
+                    <p>請稍後再回來查看</p>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card vintage-sidebar-card">
+                <div class="card-header vintage-sidebar-header">
+                    <h5>關於老奶奶</h5>
+                </div>
+                <div class="card-body">
+                    <img src="/images/grandma.png" alt="老奶奶照片" class="img-fluid rounded mb-3">
+                    <p>「老奶奶的懷舊時光」創立於1950年代，由張阿嬤一手打造，傳承了三代的好味道！</p>
+                    <a asp-action="GrandmaStories" class="btn btn-sm btn-outline-secondary">閱讀更多故事</a>
+                </div>
+            </div>
+
+            <div class="card mt-4 vintage-sidebar-card">
+                <div class="card-header vintage-sidebar-header">
+                    <h5>精選飲品</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var product in ViewBag.FeaturedProducts ?? new List<TeaTimeDemo.Models.Product>())
+                        {
+                            <li class="list-group-item vintage-sidebar-item">
+                                <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@product.Id" class="text-decoration-none text-dark">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0" style="width: 50px; height: 50px; overflow: hidden;">
+                                            <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "/images/no-image.jpg" : product.ImageUrl)" class="img-fluid" alt="@product.Name">
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">@product.Name</h6>
+                                            <small class="text-muted">NT$ @product.Price</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .vintage-blog-header {
+        background-color: #f8e8ce;
+        border-radius: 8px;
+        border-bottom: 2px dashed #d9b38c;
+    }
+
+    .vintage-blog-card {
+        background-color: #fff9e6;
+        border: 1px solid #e5d3b3;
+        transition: transform 0.3s;
+    }
+
+        .vintage-blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .vintage-blog-img {
+        object-fit: cover;
+        border-right: 1px dashed #d9b38c;
+    }
+
+    .vintage-blog-placeholder {
+        background-color: #f8e8ce;
+        color: #d9b38c;
+    }
+
+    .vintage-blog-title {
+        font-family: 'Times New Roman', serif;
+        color: #8B4513;
+    }
+
+    .vintage-sidebar-card {
+        background-color: #fff9e6;
+        border: 1px solid #e5d3b3;
+    }
+
+    .vintage-sidebar-header {
+        background-color: #f8e8ce;
+        border-bottom: 1px dashed #d9b38c;
+    }
+
+    .vintage-sidebar-item {
+        background-color: #fff9e6;
+        border-bottom: 1px dashed #e5d3b3;
+        transition: background-color 0.3s;
+    }
+
+        .vintage-sidebar-item:hover {
+            background-color: #f8e8ce;
+        }
+</style>
+}

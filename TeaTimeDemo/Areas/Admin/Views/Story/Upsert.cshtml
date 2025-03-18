@@ -1,0 +1,111 @@
+﻿<!-- TeaTimeDemo/Areas/Admin/Views/Story/Upsert.cshtml -->
+@model TeaTimeDemo.Models.Story
+
+@{
+    ViewData["Title"] = Model.Id == 0 ? "新增故事" : "編輯故事";
+    var storyTypes = new Dictionary<int, string>
+    {
+        { 0, "老奶奶的故事" },
+        { 1, "產品故事" },
+        { 2, "部落格文章" }
+    };
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="Id" hidden />
+    <input asp-for="ImageUrl" hidden />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-10">
+                <div class="border p-3 mt-4">
+                    <div class="row pb-2">
+                        <h2 class="text-primary">@(Model.Id == 0 ? "新增" : "編輯")故事</h2>
+                        <hr />
+                    </div>
+                    <div class="mb-3 row">
+                        <label asp-for="Title" class="col-sm-2 col-form-label">標題</label>
+                        <div class="col-sm-10">
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label asp-for="StoryType" class="col-sm-2 col-form-label">故事類型</label>
+                        <div class="col-sm-10">
+                            <select asp-for="StoryType" class="form-control">
+                                @foreach (var type in storyTypes)
+                                {
+                                    <option value="@type.Key">@type.Value</option>
+                                }
+                            </select>
+                            <span asp-validation-for="StoryType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label asp-for="ProductId" class="col-sm-2 col-form-label">關聯產品</label>
+                        <div class="col-sm-10">
+                            <select asp-for="ProductId" asp-items="ViewBag.ProductList" class="form-control">
+                                <option value="">--選擇相關產品--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label asp-for="Content" class="col-sm-2 col-form-label">內容</label>
+                        <div class="col-sm-10">
+                            <textarea asp-for="Content" rows="6" class="form-control"></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">圖片</label>
+                        <div class="col-sm-10">
+                            <input type="file" name="file" class="form-control" />
+                            @if (Model.ImageUrl != null)
+                            {
+                                <div class="mt-2">
+                                    <img src="@Model.ImageUrl" alt="現有圖片" style="width: 100px; height: 100px; object-fit: cover;" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label asp-for="IsFeatured" class="col-sm-2 form-check-label">設為精選</label>
+                        <div class="col-sm-10">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsFeatured" class="form-check-input" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            @if (Model.Id != 0)
+                            {
+                                <button type="submit" class="btn btn-primary">更新</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary">建立</button>
+                            }
+                        </div>
+                        <div class="col-6 text-end">
+                            <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // 新增富文本編輯器支援（可選）
+        $(document).ready(function() {
+            // 這裡可以加入如 CKEditor、TinyMCE 等富文本編輯器的初始化
+        });
+    </script>
+}
+

@@ -1,5 +1,6 @@
 ﻿using TeaTimeDemo.DataAccess.Data;
 using TeaTimeDemo.DataAccess.Repository.IRepository;
+using TeaTimeDemo.Models;
 
 namespace TeaTimeDemo.DataAccess.Repository
 {
@@ -19,6 +20,8 @@ namespace TeaTimeDemo.DataAccess.Repository
 
         public IUserFavoriteRepository UserFavorite { get; private set; }
 
+        public IStoryRepository Story { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -34,6 +37,8 @@ namespace TeaTimeDemo.DataAccess.Repository
             Coupon = new CouponRepository(_db);
 
             UserFavorite = new UserFavoriteRepository(_db);
+
+            Story = new StoryRepository(_db);
 
 
         }

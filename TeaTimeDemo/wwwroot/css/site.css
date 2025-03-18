@@ -165,3 +165,92 @@ body {
     font-size: 14px;
     color: #717171;
 }
+
+/* 在 TeaTimeDemo/wwwroot/css/site.css 文件末尾添加 */
+
+/* 故事與部落格相關的懷舊風格 */
+.vintage-font {
+    font-family: 'Times New Roman', serif;
+}
+
+.vintage-bg {
+    background-color: #fff9e6;
+}
+
+.vintage-border {
+    border: 1px solid #e5d3b3;
+}
+
+.vintage-header {
+    background-color: #f8e8ce;
+    border-bottom: 1px dashed #d9b38c;
+}
+
+.vintage-title {
+    color: #8B4513;
+    border-bottom: 2px dotted #8B4513;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.vintage-divider {
+    border-top: 1px dashed #d9b38c;
+}
+
+.vintage-box-shadow {
+    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.1);
+}
+
+.vintage-card {
+    border-radius: 8px;
+    border: 1px solid #e5d3b3;
+    background-color: #fff9e6;
+    transition: transform 0.3s ease;
+}
+
+    .vintage-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(139, 69, 19, 0.15);
+    }
+
+.vintage-img {
+    object-fit: cover;
+    border-bottom: 1px dashed #d9b38c;
+}
+
+.vintage-placeholder {
+    background-color: #f8e8ce;
+    color: #d9b38c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vintage-button {
+    background-color: #8B4513;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+    .vintage-button:hover {
+        background-color: #a0522d;
+        color: #fff;
+    }
+
+.vintage-outline-button {
+    color: #8B4513;
+    background-color: transparent;
+    border: 1px solid #8B4513;
+    transition: all 0.3s;
+}
+
+    .vintage-outline-button:hover {
+        background-color: #8B4513;
+        color: #fff;
+    }
+
+.vintage-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}

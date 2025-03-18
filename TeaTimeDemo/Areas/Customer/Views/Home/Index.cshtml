@@ -80,6 +80,119 @@
     </div>
 </div>
 
+
+<!-- 在 TeaTimeDemo/Areas/Customer/Views/Home/Index.cshtml 中添加 -->
+<!-- 加在產品列表前面或後面 -->
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="vintage-section-title">老奶奶的故事</h2>
+            <p class="text-muted">這些故事來自於老奶奶的回憶，帶您穿越時光，品味那些年的滋味</p>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (ViewBag.FeaturedStories != null && ((IEnumerable<TeaTimeDemo.Models.Story>)ViewBag.FeaturedStories).Any())
+        {
+            foreach (var story in ViewBag.FeaturedStories)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm vintage-story-card">
+                        @if (!string.IsNullOrEmpty(story.ImageUrl))
+                        {
+                            <img src="@story.ImageUrl" class="card-img-top vintage-story-img" alt="@story.Title">
+                        }
+                        else
+                        {
+                            <div class="vintage-story-placeholder d-flex align-items-center justify-content-center">
+                                <i class="bi bi-book text-muted"></i>
+                            </div>
+                        }
+                        <div class="card-body vintage-story-body">
+                            <h5 class="card-title">@story.Title</h5>
+                            <p class="card-text">
+                                @(story.Content.Length > 100 ? story.Content.Substring(0, 100) + "..." : story.Content)
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-end">
+                            <a asp-area="Customer" asp-controller="Story" asp-action="StoryDetail" asp-route-id="@story.Id" class="btn btn-outline-primary btn-sm">
+                                閱讀更多 <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p>目前沒有精選故事</p>
+                <a asp-area="Customer" asp-controller="Story" asp-action="GrandmaStories" class="btn btn-outline-primary">
+                    查看所有故事
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3 mb-5">
+        <div class="col-12 text-center">
+            <a asp-area="Customer" asp-controller="Story" asp-action="GrandmaStories" class="btn btn-primary">
+                更多老奶奶的故事 <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .vintage-section-title {
+        font-family: 'Times New Roman', serif;
+        color: #8B4513;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+        .vintage-section-title:after {
+            content: "";
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            bottom: 0;
+            left: 25%;
+            border-bottom: 2px dotted #8B4513;
+        }
+
+    .vintage-story-card {
+        border: 1px solid #e5d3b3;
+        background-color: #fff9e6;
+        transition: transform 0.3s;
+    }
+
+        .vintage-story-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .vintage-story-img {
+        height: 180px;
+        object-fit: cover;
+        border-bottom: 1px dashed #d9b38c;
+    }
+
+    .vintage-story-placeholder {
+        height: 180px;
+        background-color: #f8e8ce;
+        font-size: 3rem;
+    }
+
+    .vintage-story-body {
+        font-family: serif;
+    }
+</style>
+
+
+
+
 @section Scripts {
     <script>
         $(document).ready(function () {

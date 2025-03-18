@@ -70,4 +70,17 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
+// 在 Program.cs 中添加，確保應用啟動時創建必要的目錄
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    string wwwrootPath = app.Environment.WebRootPath;
+    string storyImagesPath = Path.Combine(wwwrootPath, "images", "stories");
+
+    if (!Directory.Exists(storyImagesPath))
+    {
+        Directory.CreateDirectory(storyImagesPath);
+    }
+});
+
+
 app.Run();

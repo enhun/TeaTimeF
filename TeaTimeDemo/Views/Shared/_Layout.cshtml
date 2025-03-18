@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - 老奶奶的懷舊時光</title>
 
-    <!-- 移除重複的 Bootstrap CSS，只保留一個版本 -->
+    <!-- 整合所有 CSS 引用，移除重複 -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TeaTimeDemo.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" />
-    <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -45,6 +43,7 @@
                                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">商品管理</a></li>
                                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="Store" asp-action="Index">門市管理</a></li>
                                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="Coupon" asp-action="Index">優惠券管理</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Story" asp-action="Index">故事管理</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">訂單管理</a></li>
                                 </ul>
@@ -63,9 +62,20 @@
                             </li>
                         }
 
+                        <!-- 整合故事與文章下拉菜單 -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-book"></i> 故事與文章
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="Customer" asp-controller="Story" asp-action="GrandmaStories">老奶奶的故事</a></li>
+                                <li><a class="dropdown-item" asp-area="Customer" asp-controller="Story" asp-action="Blog">懷舊時光部落格</a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                <i class="bi bi-cart"></i>  購物車
+                                <i class="bi bi-cart"></i> 購物車
                                 <span id="cart-count" class="badge bg-primary rounded-pill"></span>
                             </a>
                         </li>
@@ -80,13 +90,13 @@
                             </li>
                         }
 
-
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link text-dark" asp-area="Customer" asp-controller="Favorite" asp-action="Index"> *@
-                        @*         <i class="bi bi-heart"></i> 我的收藏 *@
-                        @*         <span id="favorite-count" class="badge bg-danger rounded-pill"></span> *@
-                        @*     </a> *@
-                        @* </li> *@
+                        <!-- 啟用收藏功能 -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Favorite" asp-action="Index">
+                                <i class="bi bi-heart"></i> 我的收藏
+                                <span id="favorite-count" class="badge bg-danger rounded-pill"></span>
+                            </a>
+                        </li>
 
                     </ul>
                     <partial name="_LoginPartial" />
@@ -109,11 +119,12 @@
                 <span>老奶奶的懷舊時光</span>
                 <span class="mx-2">|</span>
                 <i class="bi bi-clock-history text-muted mx-1"></i>
-                <a asp-area="" asp-controller="Home" asp-action="Privacy" >隱私政策</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">隱私政策</a>
             </div>
         </div>
     </footer>
 
+    <!-- 整合 JavaScript 引用 -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -121,30 +132,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- 獲取收藏數量（僅當用戶已登入時） -->
-    @if (User.Identity.IsAuthenticated)
-    {
-        <script>
-            $(document).ready(function() {
-                $.ajax({
-                    url: '/Customer/Favorite/GetFavoriteCount',
-                    type: 'GET',
-                    success: function(data) {
-                        if (data.count > 0) {
-                            $('#favorite-count').text(data.count);
-                        } else {
-                            $('#favorite-count').text('');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('獲取收藏數據失敗:', status, error);
-                    }
-                });
-            });
-        </script>
-    }
-
-    <!-- 添加購物車數量讀取的腳本 -->
+    <!-- 購物車數量讀取腳本 -->
     <script>
         $(document).ready(function () {
             loadCartCount();
@@ -170,6 +158,30 @@
             }
         });
     </script>
+
+    <!-- 獲取收藏數量（僅當用戶已登入且收藏功能啟用時） -->
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            $(document).ready(function() {
+                // 啟用收藏功能
+                $.ajax({
+                    url: '/Customer/Favorite/GetFavoriteCount',
+                    type: 'GET',
+                    success: function(data) {
+                        if (data.count > 0) {
+                            $('#favorite-count').text(data.count);
+                        } else {
+                            $('#favorite-count').text('');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('獲取收藏數據失敗:', status, error);
+                    }
+                });
+            });
+        </script>
+    }
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
