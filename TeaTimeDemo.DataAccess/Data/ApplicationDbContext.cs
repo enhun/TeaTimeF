@@ -42,13 +42,27 @@ namespace TeaTimeDemo.DataAccess.Data
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "果汁", DisplayOrder = 1 },
                 new Category { Id = 2, Name = "茶", DisplayOrder = 2 },
-                new Category { Id = 3, Name = "咖啡", DisplayOrder = 3 }
+                new Category { Id = 3, Name = "咖啡", DisplayOrder = 3 },
+                new Category { Id = 4, Name = "能量特調", DisplayOrder = 4 },
+new Category { Id = 5, Name = "奶昔", DisplayOrder = 5 },
+new Category { Id = 6, Name = "手搖飲", DisplayOrder = 6 },
+new Category { Id = 7, Name = "健康飲品", DisplayOrder = 7 },
+new Category { Id = 8, Name = "養生茶", DisplayOrder = 8 },
+new Category { Id = 9, Name = "高級養生", DisplayOrder = 9 }
             );
 
             modelBuilder.Entity<Product>().HasData(
                 new Product { Id = 1, Name = "阿嬤的果園鮮飲", Size = "大杯", Description = "阿嬤果園的甜蜜回憶，每一口都是童年時光的滋味", Price = 60,CategoryId=1,ImageUrl="" },
                 new Product { Id = 2, Name = "古厝烏龍茶", Size = "中杯", Description = "阿嬤茶櫃裡的珍藏，三代傳承的韻味與智慧", Price = 35, CategoryId = 2, ImageUrl = "" },
-                new Product { Id = 3, Name = "老時光手沖黑咖啡", Size = "中杯", Description = "老時光的慢磨咖啡，一杯喚醒阿嬤廊下的午後寧靜", Price = 50, CategoryId = 3, ImageUrl = "" }
+                new Product { Id = 3, Name = "老時光手沖黑咖啡", Size = "中杯", Description = "老時光的慢磨咖啡，一杯喚醒阿嬤廊下的午後寧靜", Price = 50, CategoryId = 3, ImageUrl = "" },
+                new Product { Id = 4, Name = "高血壓特調", Size = "大杯", Description = "濃縮紅牛、濃縮咖啡、濃縮可樂加上鹽巴，保證讓血壓直衝雲霄！", Price = 99, CategoryId = 4, ImageUrl = "" },
+new Product { Id = 5, Name = "膽固醇奶昔", Size = "大杯", Description = "純奶油、全脂牛奶、蛋黃、起司、炸培根混合而成，喝一口就像體檢報告爆表的感覺。", Price = 120, CategoryId = 5, ImageUrl = "" },
+new Product { Id = 6, Name = "三高手搖茶", Size = "中杯", Description = "超高糖、超高鹽、超高油，奶蓋厚到可以當被子蓋，珍珠浸泡在煉乳中，糖度100%起跳！", Price = 85, CategoryId = 6, ImageUrl = "" },
+
+new Product { Id = 7, Name = "心電圖綠拿鐵", Size = "大杯", Description = "新鮮羽衣甘藍、菠菜、酪梨、奇亞籽與燕麥奶混合，讓你的心跳穩定如心電圖。", Price = 80, CategoryId = 7, ImageUrl = "" },
+new Product { Id = 8, Name = "護肝好茶", Size = "中杯", Description = "枸杞、紅棗、決明子與菊花泡製，專為熬夜加班族打造，讓肝臟回春！", Price = 65, CategoryId = 8, ImageUrl = "" },
+new Product { Id = 9, Name = "白袍燕窩牛奶", Size = "大杯", Description = "燕窩、純牛奶、龍眼蜜，補充滿滿膠原蛋白，喝了讓皮膚發光，醫護人員最愛！", Price = 150, CategoryId = 9, ImageUrl = "" }
+
             ); 
 
             modelBuilder.Entity<Store>().HasData(
