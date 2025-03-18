@@ -147,7 +147,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-lg-inline-flex">
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav d-flex flex-row align-items-center flex-wrap">
                         <li class="nav-item mx-2">
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">
@@ -256,6 +256,21 @@
                             </li>
                         }
 
+                        <!-- 收藏功能 (如果需要啟用) -->
+                        @* @if (User.Identity.IsAuthenticated) 
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="nav-link d-flex align-items-center" asp-area="Customer" asp-controller="Favorite" asp-action="Index">
+                                    <i class="bi bi-heart"></i>
+                                    <span>我的收藏</span>
+                                    <span id="favorite-count" class="badge-nostalgic"></span>
+                                </a>
+                            </li>
+                        } *@
+                    </ul>
+
+                    <!-- 將用戶相關信息移到右側 -->
+                    <ul class="navbar-nav d-flex flex-row align-items-center ms-auto">
                         <!-- 用戶登入區塊 -->
                         <partial name="_LoginPartial" />
                     </ul>
