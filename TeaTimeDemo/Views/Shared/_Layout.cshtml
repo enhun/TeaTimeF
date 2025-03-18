@@ -14,92 +14,251 @@
     <link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+    <!-- 添加自定義導覽列樣式 -->
+    <style>
+        /* 為了避免使用@media查詢導致Razor解析錯誤，改用JavaScript動態添加類名 */
+        /* 導覽列基本風格 */
+        .navbar-nostalgic {
+            background-color: #f8f3e9;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+        }
+
+        /* 品牌名稱樣式 */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #8b5a2b !important;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            padding: 5px 15px;
+            margin-right: 20px;
+        }
+
+        /* 導覽列連結樣式 */
+        .navbar-nostalgic .nav-link {
+            color: #6B5344 !important;
+            font-size: 0.95rem;
+            padding: 6px 8px !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+            .navbar-nostalgic .nav-link i {
+                font-size: 1.2rem;
+                margin-bottom: 2px;
+            }
+
+            .navbar-nostalgic .nav-link:hover {
+                color: #8b5a2b !important;
+                background-color: rgba(255, 255, 255, 0.5);
+            }
+
+            .navbar-nostalgic .nav-link.active {
+                color: #8b5a2b !important;
+                background-color: rgba(255, 255, 255, 0.7);
+                font-weight: bold;
+            }
+
+        /* 下拉選單樣式 */
+        .navbar-nostalgic .dropdown-menu {
+            background-color: #f8f3e9;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        .navbar-nostalgic .dropdown-toggle::after {
+            display: none;
+        }
+
+        .navbar-nostalgic .dropdown-item {
+            color: #6B5344;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+            .navbar-nostalgic .dropdown-item:hover {
+                background-color: rgba(255, 255, 255, 0.6);
+                color: #8b5a2b;
+                transform: translateX(5px);
+            }
+
+        /* 分隔線樣式 */
+        .navbar-nostalgic .dropdown-divider {
+            border-top: 1px dashed rgba(139, 90, 43, 0.2);
+            margin: 8px 0;
+        }
+
+        /* 購物車與計數器樣式 */
+        .cart-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .badge-nostalgic {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #cc835c;
+            color: white;
+            border-radius: 50%;
+            padding: 0.25rem 0.45rem;
+            font-size: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        /* 響應式調整 - 使用類名而非媒體查詢 */
+        .navbar-nostalgic-mobile .nav-link {
+            padding: 10px 8px !important;
+            margin-bottom: 5px;
+        }
+
+        .navbar-nostalgic-mobile .dropdown-menu {
+            border: none;
+            background-color: rgba(248, 243, 233, 0.4);
+            box-shadow: none;
+        }
+    </style>
+
     @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">老奶奶的懷舊時光</a>
+        <nav class="navbar navbar-expand-lg navbar-nostalgic border-bottom mb-4">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-cup-hot me-2"></i>老奶奶的懷舊時光
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Index">首頁</a>
+                <div class="navbar-collapse collapse d-lg-inline-flex">
+                    <ul class="navbar-nav d-flex flex-row align-items-center flex-wrap">
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-heart"></i>
+                                <span>首頁</span>
+                            </a>
                         </li>
 
                         @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Manager))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    管理內容
+                            <li class="nav-item dropdown mx-2">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-gear"></i>
+                                    <span>管理內容</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">分類管理</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">商品管理</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Store" asp-action="Index">門市管理</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Coupon" asp-action="Index">優惠券管理</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Story" asp-action="Index">故事管理</a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                            <i class="bi bi-tags me-2"></i>分類管理
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                                            <i class="bi bi-box-seam me-2"></i>商品管理
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Store" asp-action="Index">
+                                            <i class="bi bi-shop me-2"></i>門市管理
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Coupon" asp-action="Index">
+                                            <i class="bi bi-ticket-perforated me-2"></i>優惠券管理
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Story" asp-action="Index">
+                                            <i class="bi bi-book me-2"></i>故事管理
+                                        </a>
+                                    </li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">訂單管理</a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                                            <i class="bi bi-clipboard-check me-2"></i>訂單管理
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         }
 
                         @if (User.IsInRole(SD.Role_Employee))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    員工管理
+                            <li class="nav-item dropdown mx-2">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-badge"></i>
+                                    <span>員工管理</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">訂單管理</a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                                            <i class="bi bi-clipboard-check me-2"></i>訂單管理
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         }
 
-                        <!-- 整合故事與文章下拉菜單 -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-book"></i> 故事與文章
+                        <!-- 故事與文章下拉菜單 -->
+                        <li class="nav-item dropdown mx-2">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-journal-richtext"></i>
+                                <span>故事與文章</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-area="Customer" asp-controller="Story" asp-action="GrandmaStories">老奶奶的故事</a></li>
-                                <li><a class="dropdown-item" asp-area="Customer" asp-controller="Story" asp-action="Blog">懷舊時光部落格</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Customer" asp-controller="Story" asp-action="GrandmaStories">
+                                        <i class="bi bi-chat-quote me-2"></i>老奶奶的故事
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Customer" asp-controller="Story" asp-action="Blog">
+                                        <i class="bi bi-pencil-square me-2"></i>懷舊時光部落格
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                <i class="bi bi-cart"></i> 購物車
-                                <span id="cart-count" class="badge bg-primary rounded-pill"></span>
+                        <!-- 購物車圖標 -->
+                        <li class="nav-item mx-2">
+                            <a class="nav-link cart-icon d-flex align-items-center" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+                                <i class="bi bi-basket3"></i>
+                                <span>購物車</span>
+                                <span id="cart-count" class="badge-nostalgic"></span>
                             </a>
                         </li>
 
                         <!-- 在用戶已登入的條件下添加我的訂單選項 -->
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Customer" asp-controller="Order" asp-action="Index">
-                                    <i class="bi bi-list-check"></i> 我的訂單
+                            <li class="nav-item mx-2">
+                                <a class="nav-link d-flex align-items-center" asp-area="Customer" asp-controller="Order" asp-action="Index">
+                                    <i class="bi bi-list-check"></i>
+                                    <span>我的訂單</span>
                                 </a>
                             </li>
                         }
 
-                        @* <!-- 啟用收藏功能 --> *@
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link text-dark" asp-area="Customer" asp-controller="Favorite" asp-action="Index"> *@
-                        @*         <i class="bi bi-heart"></i> 我的收藏 *@
-                        @*         <span id="favorite-count" class="badge bg-danger rounded-pill"></span> *@
-                        @*     </a> *@
-                        @* </li> *@
-
+                        <!-- 用戶登入區塊 -->
+                        <partial name="_LoginPartial" />
                     </ul>
-                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
@@ -137,6 +296,30 @@
         $(document).ready(function () {
             loadCartCount();
 
+            // 響應式設計 - 視窗寬度小於992px時添加移動端類名
+            function checkResponsive() {
+                if($(window).width() < 992) {
+                    $('.navbar-nostalgic').addClass('navbar-nostalgic-mobile');
+                } else {
+                    $('.navbar-nostalgic').removeClass('navbar-nostalgic-mobile');
+                }
+            }
+
+            // 頁面加載和窗口大小改變時檢查
+            checkResponsive();
+            $(window).resize(checkResponsive);
+
+            // 添加當前頁面活動狀態
+            let currentPath = window.location.pathname.toLowerCase();
+            $('.navbar-nav .nav-link').each(function() {
+                let linkHref = $(this).attr('href');
+                if (linkHref && currentPath.includes(linkHref.toLowerCase()) && linkHref !== '/') {
+                    $(this).addClass('active');
+                } else if (currentPath === '/' && linkHref === '/') {
+                    $(this).addClass('active');
+                }
+            });
+
             function loadCartCount() {
                 $.ajax({
                     url: '/Customer/Home/GetCartSummary',
@@ -171,8 +354,10 @@
                     success: function(data) {
                         if (data.count > 0) {
                             $('#favorite-count').text(data.count);
+                            $('#favorite-count').show();
                         } else {
                             $('#favorite-count').text('');
+                            $('#favorite-count').hide();
                         }
                     },
                     error: function(xhr, status, error) {
