@@ -104,32 +104,32 @@
                         </div>
                     </div>
 
-                    <!-- 訂單狀態追蹤區域 -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <h4 class="text-primary">訂單狀態追蹤</h4>
-                            <div class="row mt-3 mb-4">
-                                <div class="col-12">
-                                    <div class="progress-track">
-                                        <ul class="progressbar">
-                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "待處理" || Model.OrderHeader.OrderStatus == "處理中" || Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
-                                                <i class="bi bi-clipboard-check"></i><br />訂單已下單
-                                            </li>
-                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "處理中" || Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
-                                                <i class="bi bi-gear"></i><br />訂單製作中
-                                            </li>
-                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
-                                                <i class="bi bi-cup-hot"></i><br />可取餐
-                                            </li>
-                                            <li class="text-center @(Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")">
-                                                <i class="bi bi-check-circle"></i><br />訂單完成
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @* <!-- 訂單狀態追蹤區域 --> *@
+                    @* <div class="row mt-4"> *@
+                    @*     <div class="col-12"> *@
+                    @*         <h4 class="text-primary">訂單狀態追蹤</h4> *@
+                    @*         <div class="row mt-3 mb-4"> *@
+                    @*             <div class="col-12"> *@
+                    @*                 <div class="progress-track"> *@
+                    @*                     <ul class="progressbar"> *@
+                    @*                         <li class="text-center @(Model.OrderHeader.OrderStatus == "待處理" || Model.OrderHeader.OrderStatus == "處理中" || Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")"> *@
+                    @*                             <i class="bi bi-clipboard-check"></i><br />訂單已下單 *@
+                    @*                         </li> *@
+                    @*                         <li class="text-center @(Model.OrderHeader.OrderStatus == "處理中" || Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")"> *@
+                    @*                             <i class="bi bi-gear"></i><br />訂單製作中 *@
+                    @*                         </li> *@
+                    @*                         <li class="text-center @(Model.OrderHeader.OrderStatus == "可取餐" || Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")"> *@
+                    @*                             <i class="bi bi-cup-hot"></i><br />可取餐 *@
+                    @*                         </li> *@
+                    @*                         <li class="text-center @(Model.OrderHeader.OrderStatus == "已完成" ? "active" : "")"> *@
+                    @*                             <i class="bi bi-check-circle"></i><br />訂單完成 *@
+                    @*                         </li> *@
+                    @*                     </ul> *@
+                    @*                 </div> *@
+                    @*             </div> *@
+                    @*         </div> *@
+                    @*     </div> *@
+                    @* </div> *@
 
                     <!-- 新增加的訂單追蹤歷史卡片式顯示 -->
                     <div class="row mt-4">
