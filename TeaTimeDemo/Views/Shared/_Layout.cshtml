@@ -184,11 +184,6 @@
                                             <i class="bi bi-ticket-perforated me-2"></i>優惠券管理
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Story" asp-action="Index">
-                                            <i class="bi bi-book me-2"></i>故事管理
-                                        </a>
-                                    </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">
@@ -212,7 +207,23 @@
                                             <i class="bi bi-clipboard-check me-2"></i>訂單管理
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Story" asp-action="Index">
+                                            <i class="bi bi-book me-2"></i>故事管理
+                                        </a>
+                                    </li>
                                 </ul>
+                            </li>
+                        }
+
+                        <!-- 故事管理選項 - 對所有管理人員和員工可見 -->
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Manager))
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="nav-link d-flex align-items-center" asp-area="Admin" asp-controller="Story" asp-action="Index">
+                                    <i class="bi bi-book"></i>
+                                    <span>故事管理</span>
+                                </a>
                             </li>
                         }
 

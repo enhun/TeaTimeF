@@ -11,7 +11,8 @@ using TeaTimeDemo.Utility;
 namespace TeaTimeDemo.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = $"{SD.Role_Admin},{SD.Role_Manager}")]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Manager + "," + SD.Role_Employee)]
+
     public class StoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
